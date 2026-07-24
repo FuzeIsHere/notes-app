@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase";
+import * as authService from "../services/auth.service";
 
 export const AuthContext = createContext(undefined);
 
@@ -19,7 +20,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login: authService.login,
+        signup: authService.signup,
+        logout: authService.logout,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

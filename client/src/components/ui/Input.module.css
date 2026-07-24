@@ -1,0 +1,55 @@
+/* Layout container for the label and input field */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Accessible, clean label styling */
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151; /* Neutral dark gray */
+}
+
+/* Base input field styling */
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px; /* 16px prevents iOS from zooming in automatically on focus */
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Smooth focus rings matching the button design language */
+.input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* Disabled styling */
+.input:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Error variations (Crucial for MAANG code reviews) */
+.errorInput {
+  border-color: #dc2626 !important;
+}
+.errorInput:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+}
+
+.errorMessage {
+  font-size: 13px;
+  color: #dc2626;
+  margin-top: 2px;
+}
