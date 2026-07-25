@@ -16,7 +16,6 @@
 
 /* Base input field styling */
 .input {
-  width: 100%;
   padding: 10px 14px;
   font-size: 16px; /* 16px prevents iOS from zooming in automatically on focus */
   border-radius: 6px;
