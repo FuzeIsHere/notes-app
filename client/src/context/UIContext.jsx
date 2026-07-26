@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const UIContext = createContext(undefined);
 
 export const UIProvider = ({ children }) => {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
   
   // Helper to determine device type based on standard breakpoints
   const getDeviceType = (width) => {

@@ -33,7 +33,7 @@ const Navbar = ({
 						</button>
 					}
 
-					<a href="/" className={styles.logo}>BrandLogo</a>
+					<a href="/" className={styles.logo}>CoNotate</a>
 				</div>
 
 				{/* CENTER SECTION (Search Bar - Always Visible) */}

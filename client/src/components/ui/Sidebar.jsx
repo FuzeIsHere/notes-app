@@ -10,12 +10,12 @@ export const Sidebar = ({
     userEmail = "user@example.com"
 }) => {
     const [active, setActive] = useState('all-notes');
-    const [isDark, setIsDark] = useState(false);
+    //const [isDark, setIsDark] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const categories = ['Work', 'Personal', 'Ideas'];
 
-    const { device } = useUI();
+    const { device, theme, setTheme } = useUI();
     const isNotMobile = device !== 'mobile';
     // Combine classes dynamically for open/close states
     const sidebarClasses = [
@@ -98,8 +98,8 @@ export const Sidebar = ({
 
                 {/* Footer Controls */}
                 <div className={styles.footer}>
-                    <button className={styles.btn} onClick={() => setIsDark(!isDark)}>
-                        {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                    <button className={styles.btn} onClick={() => setTheme(x => x === 'dark' ? 'light' : 'dark')}>
+                        {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
                     </button>
 
                     <hr className={styles.divider} />

@@ -1,0 +1,29 @@
+.gridContainer {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  
+  /* The Fix: Force the grid container to scroll internally */
+  height: 100%;       
+  max-height: 100%;   
+  overflow-y: auto;   
+  box-sizing: border-box;
+}
+
+/* Ensure your desktop and tablet modifiers don't overwrite the scrolling */
+.mobile {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.tablet {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.desktop {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
