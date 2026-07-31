@@ -1,19 +1,31 @@
 import React from 'react';
 import styles from './NoteCard.module.css';
 import { useUI } from '../../hooks/useUI';
+import { jsx } from 'react/jsx-runtime';
+
+
+import { generateHTML, generateText } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+
 export const NoteCard = ({
 	title,
-	preview,
+	preview = '',
 	category,
 	updatedAt,
-	pinned = false,
+	ipinned = false,
 	onPinClick,
 	onOptionsClick
 }) => {
+	const [ pinned, setPinned]
+
 	const { theme } = useUI();
 	const isDark = theme === 'dark';
 	const cardClassName = `${styles.card} ${isDark ? styles.dark : styles.light}`;
 	const pinClassName = `${styles.actionButton} ${pinned ? styles.pinActive : ''}`;
+	console.log(preview)
 
 	return (
 		<div className={cardClassName}>
@@ -60,7 +72,7 @@ export const NoteCard = ({
 					</svg>
 					<span>{category}</span>
 				</div>
-				<span className={styles.timestamp}>{updatedAt}</span>
+				<span className={styles.timestamp}>{updatedAt.toDate().toLocaleString()}</span>
 			</div>
 		</div>
 	);

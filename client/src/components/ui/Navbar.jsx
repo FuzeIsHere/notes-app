@@ -8,7 +8,8 @@ import { useAuth } from '../../hooks/useAuth';
 const Navbar = ({
 	search = '',
 	setSearch = null,
-	setShowSide = null
+	setShowSide = null,
+	buttons = []
 }) => {
 
 	const { device } = useUI();
@@ -45,6 +46,17 @@ const Navbar = ({
 						onChange={(e) => setSearch(e.target.value)}
 						className={styles.searchInputOverride}
 					/>
+				</div>
+
+				{/* Buttons section */}
+				<div>
+				{
+					buttons.map(({ name, event }) => (
+						<button key={name} onClick={event}>
+							{name}
+						</button>
+					))
+				}
 				</div>
 
 				{/* RIGHT SECTION (User Icon / Log In - Desktop Only) */}

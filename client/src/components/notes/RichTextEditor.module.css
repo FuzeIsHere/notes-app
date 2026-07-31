@@ -1,0 +1,134 @@
+/* Container Wrapper Layout */
+.editorWrapper {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Toolbar Menu Panel - NOW STICKY */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10; /* Keeps buttons cleanly layered above the running document text */
+}
+
+/* Toolbar Buttons */
+.toolbarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  color: #475569;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbarButton:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.buttonActive {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Vertical Separator lines */
+.divider {
+  width: 1px;
+  height: 24px;
+  background: #e2e8f0;
+  margin: 0 4px;
+}
+
+/* Text Rich Area Container Window - NOW SCROLLABLE */
+.contentArea {
+  padding: 20px;
+  overflow-y: auto;   /* Automatically builds a natural scrollbar inside the text box */
+  min-height: 220px;
+    height: 100%;
+
+}
+
+/* --- Tiptap Editor Node Layout Scoping --- */
+.contentArea :global(.tiptap):focus {
+  outline: none;
+}
+
+.contentArea :global(.tiptap) h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.contentArea :global(.tiptap) p {
+  color: #334155;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.contentArea :global(.tiptap) ul, 
+.contentArea :global(.tiptap) ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+  color: #334155;
+}
+
+.contentArea :global(.tiptap) code {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+}
+
+.contentArea :global(.tiptap) pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.contentArea :global(.tiptap) pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.contentArea :global(.tiptap) hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 24px 0;
+}
+
+.contentArea :global(.tiptap) img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 12px 0;
+}

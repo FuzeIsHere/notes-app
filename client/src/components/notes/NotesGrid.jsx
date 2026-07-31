@@ -12,7 +12,11 @@ export const NotesGrid = ({ notes }) => {
   return (
     <div className={gridClassName}>
       {notes.map(note => (
-        <NoteCard key={note.id} {...note} theme={theme} preview={note.content} />
+        <NoteCard key={note.id} title={note.title} preview={note.preview}
+        category={note.category}
+        updatedAt={note.updatedAt}
+        ipinned={note.isPinned}
+          />
       ))}
     </div>
   );

@@ -8,8 +8,10 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 import Home from './pages/Home'
 import Dashboard from "./pages/Dashboard"
-import Editor from "./pages/Editor"
 import NotFound from './pages/NotFound'
+
+import ViewNote from './pages/ViewNote'
+import EditNote from './pages/EditNote'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -34,7 +36,16 @@ function App() {
         path="/notes/:id"
         element={
           <ProtectedRoute>
-            <Editor />
+            <ViewNote />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/notes/:id/edit"
+        element={
+          <ProtectedRoute>
+            <EditNote />
           </ProtectedRoute>
         }
       />

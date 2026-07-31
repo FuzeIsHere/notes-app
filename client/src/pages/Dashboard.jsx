@@ -1,21 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/ui/Navbar'
 import { useUI } from '../hooks/useUI'
 import { useAuth } from '../hooks/useAuth'
 import { Sidebar } from '../components/ui/Sidebar'
 import { NotesGrid } from '../components/notes/NotesGrid'
+import { getNotes, createNote } from '../services/notes.service'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const { device } = useUI();
 
   const [showSide, setShowSide] = useState(device === 'desktop');
   const [search, setSearch] = useState('');
 
+  const [notes, setNotes] = useState([])
 
+  useEffect(() => {
+    const temp = async () => {
+      const data = await getNotes();
+      setNotes(data)
+      console.log(data);
+    }
+    temp();
+  }, [])
+
+  const handleCreateNote = async () => {
+    const { id } = await createNote({});
+    //navigate(`/notes/${id}/edit`)
+    window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer');
+  }
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <Navbar search={search} setSearch={setSearch} setShowSide={setShowSide} />
+      <Navbar search={search} setSearch={setSearch} setShowSide={setShowSide} buttons={[{name: '+ Note', event: handleCreateNote}]}/>
       <div style={{ display: 'flex', flexGrow: 1, minHeight: 0 }}>
         <Sidebar isOpen={showSide} onClose={() => setShowSide(false)} />
         <NotesGrid notes={notes} />
