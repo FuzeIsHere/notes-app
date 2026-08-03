@@ -65,7 +65,7 @@
   padding: 20px;
   overflow-y: auto;   /* Automatically builds a natural scrollbar inside the text box */
   min-height: 220px;
-    height: 100%;
+  height: 100%;
 
 }
 

@@ -1,36 +1,68 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './NoteCard.module.css';
-import { useUI } from '../../hooks/useUI';
-import { jsx } from 'react/jsx-runtime';
 
+import { Link, useNavigate } from 'react-router-dom';
+import { useUI } from '../../../hooks/useUI';
+import { archiveNote, deleteNote, moveToTrash, togglePin } from '../../../services/notes.service';
 
-import { generateHTML, generateText } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Link from '@tiptap/extension-link'
-import Image from '@tiptap/extension-image'
+import { Dropdown } from '../../ui/Dropdown/Dropdown';
 
 export const NoteCard = ({
+	id,
 	title,
 	preview = '',
-	category,
+	category = '',
 	updatedAt,
-	ipinned = false,
-	onPinClick,
-	onOptionsClick
+	ipinned = false
 }) => {
-	const [ pinned, setPinned]
-
 	const { theme } = useUI();
+	const navigate = useNavigate();
+	const [pinned, setPinned] = useState(ipinned);
 	const isDark = theme === 'dark';
 	const cardClassName = `${styles.card} ${isDark ? styles.dark : styles.light}`;
 	const pinClassName = `${styles.actionButton} ${pinned ? styles.pinActive : ''}`;
-	console.log(preview)
+
+	const headerRef = useRef(null);
+	const openView = (e) => {
+		if (!headerRef.current) return;
+		const headerRect = headerRef.current.getBoundingClientRect();
+		if (e.clientY <= headerRect.bottom) return;
+		window.open(`/notes/${id}`, '_blank', 'noopener,noreferrer');
+	}
+
+	const onPinClick = async () => {
+		setPinned(await togglePin(id, pinned));
+	}
+
+	const [popupTarget, setPopupTarget] = useState(null);
+
+	const handleThreeDotsClick = (e) => {
+		// Capture the target element's exact screen size and position parameters
+		setPopupTarget(e.currentTarget.getBoundingClientRect());
+	};
+	const menuOptions = [
+		{ label: 'Edit', action: () => window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer') },
+		{
+			label: 'Archive', action: async () => {
+				await archiveNote(id);
+			}
+		},
+		{
+			label: 'Move to Trash', action: async () => {
+				await moveToTrash(id);
+			}
+		},
+		{
+			label: 'Delete', action: async () => {
+				await deleteNote(id);
+			}
+		},
+	];
 
 	return (
-		<div className={cardClassName}>
+		<div className={cardClassName} onClick={openView}>
 			{/* Top Header Row */}
-			<div className={styles.headerRow}>
+			<div className={styles.headerRow} onClick={e => e.stopPropagation()} ref={headerRef}>
 				<div className={styles.titleContainer}>
 					{/* Pin Button */}
 					<button
@@ -49,7 +81,7 @@ export const NoteCard = ({
 				{/* Three Dots More Options Button */}
 				<button
 					className={styles.actionButton}
-					onClick={onOptionsClick}
+					onClick={handleThreeDotsClick}
 					aria-label="More options"
 				>
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,6 +91,17 @@ export const NoteCard = ({
 					</svg>
 				</button>
 			</div>
+
+			{/* Popup menu */}
+			{popupTarget && (
+				<Dropdown
+					options={menuOptions}
+					triggerRect={popupTarget}
+					triggerCorner="bottom-right" // Spawns from bottom right of the 3 dots
+					popupCorner="top-right"      // Aligns top-right of popup to that anchor
+					onClose={() => setPopupTarget(null)}
+				/>
+			)}
 
 			{/* Main Content Body Preview */}
 			<p className={styles.preview}>{preview}</p>

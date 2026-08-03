@@ -49,6 +49,31 @@ export async function updateNote(id, updates) {
     })
 }
 
+export async function updateTitle(id, title){
+    if(!title) return;
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        title
+    })
+    return title
+}
+
+export async function switchCategory(id, category){
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        category
+    })
+    return category
+}
+
+export async function moveToTrash(id, curr) { 
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        isDeleted: !curr
+    })
+    return !curr
+}
+
 export async function deleteNote(id) {
     const noteDocRef = doc(db, 'notes', id);
     await deleteDoc(noteDocRef)
@@ -58,4 +83,10 @@ export async function archiveNote(id) { }
 
 export async function restoreNote(id) { }
 
-export async function togglePin(id) { }
+export async function togglePin(id, curr) { 
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        isPinned: !curr
+    })
+    return !curr
+}

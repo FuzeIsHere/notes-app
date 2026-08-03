@@ -1,0 +1,229 @@
+/* Base Navbar Scope Custom Variable Configurations */
+.navbar {
+  width: 100%;
+  height: 60px;
+  min-height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  font-family: system-ui, -apple-system, sans-serif;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Light Theme Variables Context */
+.lightTheme {
+  --nav-bg: #ffffff;
+  --nav-border: #e5e7eb;
+  --text-main: #111827;
+  --text-muted: #4b5563;
+  --text-light: #9ca3af;
+  --hover-bg: #f3f4f6;
+  --saved-bg: #ecfdf5;
+  --saved-text: #10b981;
+}
+
+/* Dark Theme Variables Context Override */
+.darkTheme {
+  --nav-bg: #1f2937;
+  --nav-border: #374151;
+  --text-main: #f9fafb;
+  --text-muted: #d1d5db;
+  --text-light: #6b7280;
+  --hover-bg: #374151;
+  --saved-bg: #065f46;
+  --saved-text: #34d399;
+}
+
+/* Structural Components Binding Variable Hooks */
+.navbar {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.navContainer {
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menuButton {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.backLink {
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.backLink:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-main);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  text-decoration: none;
+  letter-spacing: -0.025em;
+}
+
+/* Center Section Layout Elements */
+.titleContainer {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.titleInput {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  border: none;
+  background: transparent;
+  padding: 6px 0;
+  width: 100%;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.titleInput::placeholder {
+  color: var(--text-light);
+}
+
+/* Save Sync Indicator Statuses */
+.statusIndicator {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.saved {
+  color: var(--saved-text);
+  background-color: var(--saved-bg);
+}
+
+.saving {
+  color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+/* Right Side Actions Alignment */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Universal Action Icon Layout Structure */
+.actionIconButton {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.actionIconButton:hover {
+  color: var(--text-main);
+  background-color: var(--hover-bg);
+}
+
+.activeTrigger {
+  /* Absorbs the click cycle safely while the dropdown is active */
+  pointer-events: none;
+}
+
+
+/* Active Highlight for Pinned Notes Component */
+.pinnedButton {
+  color: #eab308 !important; /* Vivid gold pin accent */
+}
+
+/* Special Deletion Handle Configuration override */
+.deleteButton {
+  composes: actionIconButton;
+}
+
+.deleteButton:hover {
+  color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Dropdown native formatting layout overrides */
+.categoryWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.categorySelect {
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid var(--nav-border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.categorySelect:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--text-light);
+}
+
+.avatarButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+}
+
+.avatarImg {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--nav-border);
+}

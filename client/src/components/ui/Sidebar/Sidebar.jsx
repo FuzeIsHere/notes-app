@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
-import { useAuth } from '../../hooks/useAuth';
-import { useUI } from '../../hooks/useUI';
+import { useAuth } from '../../../hooks/useAuth';
+import { useUI } from '../../../hooks/useUI';
 import { useNavigate } from 'react-router-dom';
 
 export const Sidebar = ({

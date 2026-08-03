@@ -1,0 +1,127 @@
+/* Base Style Rules */
+.navbar {
+  width: 100%;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Theme Mappings */
+.lightTheme {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+.lightTheme .logo { color: #111827; }
+.lightTheme .menuButton { color: #374151; }
+.lightTheme .defaultButton { color: #374151; background: transparent; }
+
+.darkTheme {
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+.darkTheme .logo { color: #f9fafb; }
+.darkTheme .menuButton { color: #d1d5db; }
+.darkTheme .defaultButton { color: #d1d5db; background: transparent; }
+
+/* Structural Mobile Configurations */
+.navContainerMobile {
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topRowMobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Structural Desktop Configurations */
+.navContainerDesktop {
+  height: 60px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.rightGroupDesktop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Generic Modular Item Rules */
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menuButton {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+.searchContainer {
+  flex: 1;
+  max-width: 500px;
+}
+
+.searchInputOverride {
+  margin-bottom: 0 !important;
+}
+
+.buttonsSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.defaultButton {
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  font-weight: 500;
+}
+
+.noteButton {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.noteButton:hover {
+  background-color: #1d4ed8;
+}
+
+.avatarButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+}
+
+.avatarImg {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}

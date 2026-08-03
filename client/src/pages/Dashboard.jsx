@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/ui/Navbar'
 import { useUI } from '../hooks/useUI'
 import { useAuth } from '../hooks/useAuth'
-import { Sidebar } from '../components/ui/Sidebar'
-import { NotesGrid } from '../components/notes/NotesGrid'
-import { getNotes, createNote } from '../services/notes.service'
 import { useNavigate } from 'react-router-dom'
+import { getNotes, createNote } from '../services/notes.service'
+
+import Navbar from '../components/ui/Navbar/Navbar'
+import { Sidebar } from '../components/ui/Sidebar/Sidebar'
+import { NotesGrid } from '../components/notes/NotesGrid/NotesGrid'
 
 const Dashboard = () => {
   const navigate = useNavigate();

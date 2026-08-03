@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUI } from '../../hooks/useUI';
-import { NoteCard } from './NoteCard';
+import { useUI } from '../../../hooks/useUI';
+import { NoteCard } from '../NoteCard/NoteCard';
 import styles from './NotesGrid.module.css';
 
 export const NotesGrid = ({ notes }) => {
@@ -12,7 +12,10 @@ export const NotesGrid = ({ notes }) => {
   return (
     <div className={gridClassName}>
       {notes.map(note => (
-        <NoteCard key={note.id} title={note.title} preview={note.preview}
+        <NoteCard key={note.id}
+        id={note.id}
+        title={note.title} 
+        preview={note.preview}
         category={note.category}
         updatedAt={note.updatedAt}
         ipinned={note.isPinned}
