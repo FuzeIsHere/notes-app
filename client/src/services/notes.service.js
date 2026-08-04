@@ -10,8 +10,15 @@ export async function createNote(note) {
         collaborators: [],
 
         title: "New",
-        content: { /*...TipTap JSON...*/ },
-        category: "Personal",
+        content: {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph"
+                }
+            ]
+        },
+        category: "personal",
 
         pinned: false,
         archived: false,
@@ -49,8 +56,8 @@ export async function updateNote(id, updates) {
     })
 }
 
-export async function updateTitle(id, title){
-    if(!title) return;
+export async function updateTitle(id, title) {
+    if (!title) return;
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         title
@@ -58,7 +65,7 @@ export async function updateTitle(id, title){
     return title
 }
 
-export async function switchCategory(id, category){
+export async function switchCategory(id, category) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         category
@@ -66,7 +73,7 @@ export async function switchCategory(id, category){
     return category
 }
 
-export async function moveToTrash(id, curr) { 
+export async function moveToTrash(id, curr) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         isDeleted: !curr
@@ -83,7 +90,7 @@ export async function archiveNote(id) { }
 
 export async function restoreNote(id) { }
 
-export async function togglePin(id, curr) { 
+export async function togglePin(id, curr) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         isPinned: !curr

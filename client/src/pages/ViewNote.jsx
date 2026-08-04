@@ -20,13 +20,6 @@ function ViewNote() {
     })()
   }, [])
 
-  // const handleNoteUpdate = async (x) => {
-  //   setStatus('Saving...')
-  //   setNote(curr => ({ ...curr, ...x }))
-  //   await updateNote(id, x);
-  //   setStatus('Saved')
-  // }
-
   //const timeoutTitle = useRef(null)
   const dedounceTitle = useDebounce(500)
   const changeTitle = async (title) => {

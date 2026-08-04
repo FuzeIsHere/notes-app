@@ -12,20 +12,57 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { device } = useUI();
-
   const [showSide, setShowSide] = useState(device === 'desktop');
-  const [search, setSearch] = useState('');
 
   const [notes, setNotes] = useState([])
+
+  const [search, setSearch] = useState('');
+  const sidebarItems = [
+    { id: "all", label: "All Notes", type: "system" },
+    // { id: "fav", label: "Favourites", type: "system" },
+    { id: "work", label: "Work", type: "category" },
+    { id: "personal", label: "Personal", type: "category" },
+    { id: "ideas", label: "Ideas", type: "category" },
+    { id: "archive", label: "Archive", type: "system" },
+    { id: "trash", label: "Trash", type: "system" },
+  ];
+  const [selectedView, setSelectedView] = useState('all')
+
+  const [displayNotes, setDisplayNotes] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const updateDisplayNotes = async () => {
+    let copy = [...notes]
+    
+    const viewFilter = sidebarItems.find(x => x.id === selectedView)
+    if(viewFilter.type === 'category') copy = copy.filter(x => x.category === viewFilter.id)
+    else{
+      switch(viewFilter.id){
+        case 'archive': copy = copy.filter(x => x.isArchive); break;
+        case 'trash': copy = copy.filter(x => x.isDeleted); break;
+      }
+    }
+
+    copy.sort((a, b) => {
+      if (a.isPinned == b.isPinned) return b.createdAt - a.createdAt;
+      else return a.isPinned ? -1 : 1;
+    })
+    setDisplayNotes(copy)
+    setLoading(false)
+  }
+
 
   useEffect(() => {
     const temp = async () => {
       const data = await getNotes();
       setNotes(data)
-      console.log(data);
     }
     temp();
   }, [])
+
+  useEffect(() => {
+    updateDisplayNotes()
+  }, [notes, search, selectedView])
 
   const handleCreateNote = async () => {
     const { id } = await createNote({});
@@ -33,12 +70,23 @@ const Dashboard = () => {
     window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer');
   }
 
+  //if(loading) return <p>Loading...</p>
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <Navbar search={search} setSearch={setSearch} setShowSide={setShowSide} buttons={[{name: '+ Note', event: handleCreateNote}]}/>
+      <Navbar
+        search={search} setSearch={setSearch}
+        setShowSide={setShowSide}
+        buttons={[{ name: '+ Note', event: handleCreateNote }]}
+      />
       <div style={{ display: 'flex', flexGrow: 1, minHeight: 0 }}>
-        <Sidebar isOpen={showSide} onClose={() => setShowSide(false)} />
-        <NotesGrid notes={notes} />
+        <Sidebar
+          isOpen={showSide}
+          onClose={() => setShowSide(false)}
+          active={selectedView}
+          setActive={setSelectedView}
+        />
+        {!loading ? <NotesGrid notes={displayNotes} /> : <p>Loading</p>}
       </div>
     </div>
 
@@ -46,206 +94,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
-const notes = [
-  {
-    id: "1",
-    title: "Shopping List",
-    content: "Milk, Eggs, Bread, Chicken, Rice, Coffee",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: true,
-    updatedAt: "Today"
-  },
-  {
-    id: "2",
-    title: "DSA Revision",
-    content: "Binary Search, Sliding Window, DFS, Union Find",
-    category: "Study",
-    archived: false,
-    deleted: false,
-    pinned: true,
-    updatedAt: "Yesterday"
-  },
-  {
-    id: "3",
-    title: "Resume Improvements",
-    content: "Add Notes App project, update GitHub, improve project descriptions",
-    category: "Career",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "2 days ago"
-  },
-  {
-    id: "4",
-    title: "React TODO",
-    content: "Finish dashboard, CRUD operations, search functionality, deploy app",
-    category: "Development",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 25"
-  },
-  {
-    id: "5",
-    title: "Interview Questions",
-    content: "Difference between JWT and Sessions, Explain React Context, Event Loop",
-    category: "Career",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 22"
-  },
-  {
-    id: "6",
-    title: "Project Ideas",
-    content: "AI Interview Platform, Expense Tracker, URL Shortener",
-    category: "Ideas",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 20"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  },
-  {
-    id: "7",
-    title: "Books to Read",
-    content: "Clean Code, Designing Data-Intensive Applications, Atomic Habits",
-    category: "Personal",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 18"
-  },
-  {
-    id: "8",
-    title: "Weekend Goals",
-    content: "LeetCode Contest, Finish Notes App Dashboard, Push to GitHub",
-    category: "Planning",
-    archived: false,
-    deleted: false,
-    pinned: false,
-    updatedAt: "Jul 17"
-  }
-];

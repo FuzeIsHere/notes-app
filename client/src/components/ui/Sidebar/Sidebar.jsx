@@ -7,9 +7,11 @@ import { useNavigate } from 'react-router-dom';
 export const Sidebar = ({
     isOpen,
     onClose,
+    active,
+    setActive,
     userEmail = "user@example.com"
 }) => {
-    const [active, setActive] = useState('all-notes');
+    //const [active, setActive] = useState('all-notes');
     //const [isDark, setIsDark] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -54,18 +56,18 @@ export const Sidebar = ({
                 {/* Navigation Items */}
                 <div className={styles.nav}>
                     <button
-                        className={[styles.btn, active === 'all-notes' ? styles.active : ''].join(' ')}
-                        onClick={() => setActive('all-notes')}
+                        className={[styles.btn, active === 'all' ? styles.active : ''].join(' ')}
+                        onClick={() => setActive('all')}
                     >
                         📝 All Notes
                     </button>
 
-                    <button
+                    {/* <button
                         className={[styles.btn, active === 'fav' ? styles.active : ''].join(' ')}
                         onClick={() => setActive('fav')}
                     >
                         ⭐ Favourites
-                    </button>
+                    </button> */}
 
                     {/* Categories Sub-list */}
                     <div className={styles.categorySection}>
@@ -73,8 +75,8 @@ export const Sidebar = ({
                         {categories.map(cat => (
                             <button
                                 key={cat}
-                                className={[styles.subBtn, active === cat ? styles.active : ''].join(' ')}
-                                onClick={() => setActive(cat)}
+                                className={[styles.subBtn, active === cat.toLowerCase() ? styles.active : ''].join(' ')}
+                                onClick={() => setActive(cat.toLowerCase())}
                             >
                                 • {cat}
                             </button>

@@ -16,7 +16,6 @@ function EditNote() {
     (async () => {
       setNote(await getNote(id))
       setStatus('Saved')
-      console.log(status, note)
     })()
   }, [])
 

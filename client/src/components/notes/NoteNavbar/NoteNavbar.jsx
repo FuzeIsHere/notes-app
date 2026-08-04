@@ -14,7 +14,7 @@ const NoteNavbar = ({
 
 	category = '',
 	onCategoryChange = null,
-	categoriesList = ['Personal', 'Work', 'Ideas', 'Notes'], // Fallback options
+	categoriesList = ['Personal', 'Work', 'Ideas'], // Fallback options
 	// New feature control props
 	isPinned = false,
 	onTogglePin = null,
