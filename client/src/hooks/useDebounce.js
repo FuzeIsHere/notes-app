@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { useRef } from "react";
 
 export const useDebounce = (delay) => {
-
     const timeout = useRef(null)
     const x = (action) => {
         clearTimeout(timeout.current);
@@ -9,5 +9,11 @@ export const useDebounce = (delay) => {
             action()
         }, delay)
     }
+    
+    useEffect(() => {
+        return () => {
+            clearTimeout(timeout.current)
+        }
+    }, [])
     return x
 }

@@ -1,13 +1,105 @@
 .viewerWrapper {
-  border: 1px solid #e2e8f0;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
   width: 100%;
   margin: 0;
-  padding: 15px;
-  overflow: hidden;
-  background: #fff;
+  padding: 20px;
+  overflow-y: auto;
   font-family: system-ui, -apple-system, sans-serif;
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background: var(--viewer-bg);
+  border: 1px solid var(--viewer-border);
+}
+
+.light {
+  --viewer-bg: #ffffff;
+  --viewer-border: #e2e8f0;
+  --text-main: #1e293b;
+  --text-body: #334155;
+  --code-bg: #f1f5f9;
+  --code-text: #0f172a;
+  --pre-bg: #0f172a;
+  --pre-text: #e2e8f0;
+  --hr-border: #e2e8f0;
+  --link-color: #2563eb;
+}
+
+.dark {
+  --viewer-bg: #18181b;
+  --viewer-border: #27272a;
+  --text-main: #f4f4f5;
+  --text-body: #e4e4e7;
+  --code-bg: #27272a;
+  --code-text: #f4f4f5;
+  --pre-bg: #09090b;
+  --pre-text: #e4e4e7;
+  --hr-border: #27272a;
+  --link-color: #3b82f6;
+}
+
+.renderedContent h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--text-main);
+}
+
+.renderedContent p {
+  line-height: 1.6;
+  margin-bottom: 12px;
+  color: var(--text-body);
+}
+
+.renderedContent ul, 
+.renderedContent ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+  color: var(--text-body);
+}
+
+.renderedContent code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  background-color: var(--code-bg);
+  color: var(--code-text);
+}
+
+.renderedContent pre {
+  padding: 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 14px 0;
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--pre-bg);
+  color: var(--pre-text);
+}
+
+.renderedContent pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.renderedContent hr {
+  border: none;
+  margin: 24px 0;
+  border-top: 2px solid var(--hr-border);
+}
+
+.renderedContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.viewerLink {
+  color: var(--link-color);
+  text-decoration: underline;
 }

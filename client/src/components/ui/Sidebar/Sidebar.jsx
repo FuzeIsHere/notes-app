@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './Sidebar.module.css';
 import { useAuth } from '../../../hooks/useAuth';
 import { useUI } from '../../../hooks/useUI';
@@ -8,28 +8,27 @@ export const Sidebar = ({
     isOpen,
     onClose,
     active,
-    setActive,
-    userEmail = "user@example.com"
+    setActive
 }) => {
-    //const [active, setActive] = useState('all-notes');
-    //const [isDark, setIsDark] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const categories = ['Work', 'Personal', 'Ideas'];
 
     const { device, theme, setTheme } = useUI();
     const isNotMobile = device !== 'mobile';
-    // Combine classes dynamically for open/close states
+    
+    // Injected the theme class (styles.light or styles.dark) to the root container dynamically
     const sidebarClasses = [
         styles.sidebar,
+        styles[theme], 
         isNotMobile ? styles.desktop : '',
         (!isNotMobile && isOpen) ? styles.mobileOpen : ''
     ].join(' ');
 
     const handleLogout = async () => {
-        await logout()
-        navigate('/login')
-    }
+        await logout();
+        navigate('/login');
+    };
 
     return (
         <>
@@ -49,7 +48,7 @@ export const Sidebar = ({
                 {!isNotMobile && user && (
                     <div className={styles.userBanner}>
                         <span>Logged in as:</span>
-                        <strong>{userEmail}</strong>
+                        <strong>{user.displayName || 'User'}</strong>
                     </div>
                 )}
 
@@ -61,13 +60,6 @@ export const Sidebar = ({
                     >
                         📝 All Notes
                     </button>
-
-                    {/* <button
-                        className={[styles.btn, active === 'fav' ? styles.active : ''].join(' ')}
-                        onClick={() => setActive('fav')}
-                    >
-                        ⭐ Favourites
-                    </button> */}
 
                     {/* Categories Sub-list */}
                     <div className={styles.categorySection}>

@@ -1,51 +1,64 @@
-/* Container Base Styles */
 .popupContainer {
   position: fixed;
   z-index: 9999;
-  min-width: 160px;
+  min-width: 180px;
   max-width: 280px;
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
+  gap: 2px;
   border: 1px solid transparent;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
   user-select: none;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--drop-bg);
+  border-color: var(--drop-border);
+  box-shadow: var(--drop-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Theme Mappings */
 .light {
-  background-color: #ffffff;
-  border-color: #e2e8f0;
-  color: #1a202c;
+  --drop-bg: rgba(255, 255, 255, 0.95);
+  --drop-border: #e4e4e7;
+  --drop-shadow: 0 10px 15px -3px rgba(24, 24, 27, 0.08), 0 4px 6px -4px rgba(24, 24, 27, 0.08);
+  --item-txt: #3f3f46;
+  --item-hover-bg: #f4f4f5;
+  --item-hover-txt: #18181b;
 }
 
 .dark {
-  background-color: #1a202c;
-  border-color: #2d3748;
-  color: #edf2f7;
+  --drop-bg: rgba(24, 24, 27, 0.95);
+  --drop-border: #27272a;
+  --drop-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --item-txt: #d4d4d8;
+  --item-hover-bg: #27272a;
+  --item-hover-txt: #ffffff;
 }
 
-/* Individual Action Items */
 .optionItem {
   background: none;
   border: none;
   text-align: left;
   padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer !important;
+  border-radius: 6px;
   width: 100%;
-  color: inherit;
-  transition: background-color 0.15s ease;
+  box-sizing: border-box;
+  color: var(--item-txt);
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease;
 }
 
-/* Hover States per Theme */
-.light .optionItem:hover {
-  background-color: #f7fafc;
+
+.optionItem:hover {
+  background-color: var(--item-hover-bg);
+  color: var(--item-hover-txt);
 }
 
-.dark .optionItem:hover {
-  background-color: #2d3748;
+.optionItem:active {
+  transform: scale(0.98);
 }

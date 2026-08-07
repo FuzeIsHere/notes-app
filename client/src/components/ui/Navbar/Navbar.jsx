@@ -13,8 +13,6 @@ const Navbar = ({
 }) => {
 	const { device, theme } = useUI();
 	const { user } = useAuth();
-
-	const themeClass = theme === 'dark' ? styles.darkTheme : styles.lightTheme;
 	const isMobile = device === 'mobile';
 
 	// Shared Search Component
@@ -49,7 +47,8 @@ const Navbar = ({
 	);
 
 	return (
-		<header className={`${styles.navbar} ${themeClass}`}>
+		/* Replaced the arbitrary ternary string with direct style class mapping mapping */
+		<header className={`${styles.navbar} ${styles[theme]}`}>
 			<div className={isMobile ? styles.navContainerMobile : styles.navContainerDesktop}>
 				
 				{isMobile ? (

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Input.module.css';
+import { useUI } from '../../../hooks/useUI'; // Subscribed to useUI to control darkness namespaces
 
 export const Input = ({
   label,
@@ -10,17 +11,17 @@ export const Input = ({
   value='',
   ...props
 }) => {
-  // Dynamically attach the error styling if an error message is present
+  const { theme } = useUI(); // Grab 'light' or 'dark'
+
   const inputClasses = [
     styles.input,
     error ? styles.errorInput : '',
     className
   ].join(' ');
 
-  //console.log(label, value);
-
   return (
-    <div className={styles.container}>
+    /* We inject the current theme state at the root container to cleanly handle child states */
+    <div className={`${styles.container} ${styles[theme]}`}>
       {/* Only render the label element if a label prop is provided */}
       {label && (
         <label htmlFor={id} className={styles.label}>

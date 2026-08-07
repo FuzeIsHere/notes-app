@@ -1,14 +1,14 @@
-
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import NoteNavbar from '../components/notes/NoteNavbar/NoteNavbar'
 import { useParams } from 'react-router-dom'
-import { getNote, switchCategory, togglePin, updateNote, updateTitle } from '../services/notes.service'
+import { getNote, updateCategory, togglePin, updateTitle } from '../services/notes.service'
 import { useDebounce } from '../hooks/useDebounce'
 import RichTextViewer from '../components/notes/RichTextViewer/RichTextViewer'
+import { useUI } from '../hooks/useUI'
 
 function ViewNote() {
-
   const { id } = useParams();
+  const { theme } = useUI();
 
   const [note, setNote] = useState({ title: '', content: [] })
   const [status, setStatus] = useState('Loading');
@@ -20,7 +20,6 @@ function ViewNote() {
     })()
   }, [])
 
-  //const timeoutTitle = useRef(null)
   const dedounceTitle = useDebounce(500)
   const changeTitle = async (title) => {
     setNote(x => ({ ...x, title: title }))
@@ -37,7 +36,7 @@ function ViewNote() {
     setNote(x => ({ ...x, category: category }))
     setStatus('Saving...')
     dedounceCategory(async () => {
-      await switchCategory(id, category)
+      await updateCategory(id, category)
       setStatus('Saved')   
     })
   }
@@ -53,22 +52,22 @@ function ViewNote() {
   }
 
   if (status === 'Loading') {
-    return <p></p>
+    return null
   }
+
+  const isDark = theme === 'dark';
+  const pageBg = isDark ? '#111113' : '#ffffff';
+
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: pageBg, transition: 'background-color 0.2s ease' }}>
       <NoteNavbar
         id={id}
-
         title={note.title}
         setTitle={changeTitle}
-
         category={note.category}
         onCategoryChange={changeCategory}
-
         isPinned={note.isPinned}
         onTogglePin={changePinnedStatus}
-
       />
       <RichTextViewer content={note.content} />
     </div>

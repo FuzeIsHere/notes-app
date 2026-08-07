@@ -1,29 +1,84 @@
+/* ==========================================================================
+   BASE GRID CONTAINER LAYOUT
+   ========================================================================== */
 .gridContainer {
   display: grid;
-  gap: 16px;
-  padding: 16px;
   width: 100%;
-  
-  /* The Fix: Force the grid container to scroll internally */
   height: 100%;       
   max-height: 100%;   
   overflow-y: auto;   
   box-sizing: border-box;
+  align-content: start; /* Prevents cards from stretching vertically down the canvas */
+  font-family: system-ui, -apple-system, sans-serif;
+  
+  /* Smooth transition for theme swaps */
+  transition: background-color 0.2s ease;
 }
 
-/* Ensure your desktop and tablet modifiers don't overwrite the scrolling */
+/* ==========================================================================
+   DEVICE SPECIFIC OVERRIDES & RESPONSIVE COMPACTNESS
+   ========================================================================== */
 .mobile {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px;
 }
 
 .tablet {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Dynamic alignment adapting if layout changes */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+  padding: 20px;
 }
 
 .desktop {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Fluid auto-fill dynamically populates spaces beautifully */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
-  max-width: 1200px;
+  max-width: 1400px; /* Extended boundary slightly to avoid excessive dead margin spaces */
   margin: 0 auto;
+  padding: 24px;
 }
+
+/* ==========================================================================
+   THEME STYLE MAPPINGS & SCROLLBAR DESIGN
+   ========================================================================== */
+.light {
+  background-color: #fbfbfb; /* Softer, low-contrast canvas grey reduces eye fatigue */
+}
+
+/* Modern thin browser scrollbars for Light Mode */
+.light::-webkit-scrollbar { width: 8px; }
+.light::-webkit-scrollbar-track { background: transparent; }
+.light::-webkit-scrollbar-thumb { background-color: #e4e4e7; border-radius: 20px; }
+.light::-webkit-scrollbar-thumb:hover { background-color: #d4d4d8; }
+
+.dark {
+  background-color: #121214; /* Deep neutral dark shade underlying the zinc components */
+}
+
+/* Modern thin browser scrollbars for Dark Mode */
+.dark::-webkit-scrollbar { width: 8px; }
+.dark::-webkit-scrollbar-track { background: transparent; }
+.dark::-webkit-scrollbar-thumb { background-color: #27272a; border-radius: 20px; }
+.dark::-webkit-scrollbar-thumb:hover { background-color: #3f3f46; }
+
+/* ==========================================================================
+   EMPTY STATE LAYOUT UTILITIES
+   ========================================================================== */
+.emptyStateContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.emptyStateText {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.light .emptyStateText { color: #71717a; }
+.dark .emptyStateText { color: #a1a1aa; }

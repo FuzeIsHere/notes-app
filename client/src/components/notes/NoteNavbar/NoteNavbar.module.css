@@ -1,4 +1,3 @@
-/* Base Navbar Scope Custom Variable Configurations */
 .navbar {
   width: 100%;
   height: 60px;
@@ -8,36 +7,30 @@
   z-index: 50;
   font-family: system-ui, -apple-system, sans-serif;
   transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-/* Light Theme Variables Context */
-.lightTheme {
-  --nav-bg: #ffffff;
-  --nav-border: #e5e7eb;
-  --text-main: #111827;
-  --text-muted: #4b5563;
-  --text-light: #9ca3af;
-  --hover-bg: #f3f4f6;
-  --saved-bg: #ecfdf5;
-  --saved-text: #10b981;
-}
-
-/* Dark Theme Variables Context Override */
-.darkTheme {
-  --nav-bg: #1f2937;
-  --nav-border: #374151;
-  --text-main: #f9fafb;
-  --text-muted: #d1d5db;
-  --text-light: #6b7280;
-  --hover-bg: #374151;
-  --saved-bg: #065f46;
-  --saved-text: #34d399;
-}
-
-/* Structural Components Binding Variable Hooks */
-.navbar {
   background-color: var(--nav-bg);
   border-bottom: 1px solid var(--nav-border);
+}
+
+.light {
+  --nav-bg: #ffffff;
+  --nav-border: #e4e4e7;
+  --text-main: #18181b;
+  --text-muted: #71717a;
+  --text-light: #a1a1aa;
+  --hover-bg: #f4f4f5;
+  --accent-red: #ef4444;
+  --accent-blue: #2563eb;
+}
+
+.dark {
+  --nav-bg: #18181b;
+  --nav-border: #27272a;
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-light: #71717a;
+  --hover-bg: #27272a;
+  --accent-red: #f87171;
+  --accent-blue: #3b82f6;
 }
 
 .navContainer {
@@ -86,15 +79,14 @@
 .logo {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--text-light);
+  color: var(--text-main);
   text-decoration: none;
   letter-spacing: -0.025em;
 }
 
-/* Center Section Layout Elements */
 .titleContainer {
   flex: 1;
-  max-width: 600px;
+  max-width: 500px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -102,114 +94,102 @@
 
 .titleInput {
   flex: 1;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-main);
   border: none;
   background: transparent;
   padding: 6px 0;
   width: 100%;
+  transition: border-color 0.15s;
 }
 
 .titleInput:focus {
   outline: none;
-  border-bottom: 1px solid var(--nav-border);
 }
 
 .titleInput::placeholder {
   color: var(--text-light);
 }
 
-/* Save Sync Indicator Statuses */
-.statusIndicator {
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 12px;
-  white-space: nowrap;
-}
-
-.saved {
-  color: var(--saved-text);
-  background-color: var(--saved-bg);
-}
-
-.saving {
-  color: #f59e0b;
-  background-color: #fffbeb;
-}
-
-/* Right Side Actions Alignment */
-.rightSection {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* Universal Action Icon Layout Structure */
-.actionIconButton {
-  background: transparent;
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s ease;
-}
-
-.actionIconButton:hover {
-  color: var(--text-main);
-  background-color: var(--hover-bg);
-}
-
-.activeTrigger {
-  /* Absorbs the click cycle safely while the dropdown is active */
-  pointer-events: none;
-}
-
-
-/* Active Highlight for Pinned Notes Component */
-.pinnedButton {
-  color: #eab308 !important; /* Vivid gold pin accent */
-}
-
-/* Special Deletion Handle Configuration override */
-.deleteButton {
-  composes: actionIconButton;
-}
-
-.deleteButton:hover {
-  color: #ef4444;
-  background-color: #fef2f2;
-}
-
-/* Dropdown native formatting layout overrides */
 .categoryWrapper {
   position: relative;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
 }
 
 .categorySelect {
   appearance: none;
-  background-color: transparent;
-  border: 1px solid var(--nav-border);
+  background-color: var(--hover-bg);
+  border: 1px solid transparent;
   border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
+  padding: 4px 10px;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
   outline: none;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .categorySelect:hover {
+  color: var(--text-main);
+}
+
+.actionIconButton {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.actionIconButton:hover {
   background-color: var(--hover-bg);
-  border-color: var(--text-light);
+  color: var(--text-main);
+}
+
+.activeTrigger {
+  pointer-events: none;
+}
+
+.pinnedButton {
+  color: var(--accent-red);
+}
+
+.pinnedButton:hover {
+  color: var(--accent-red);
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.deleteButton {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.deleteButton:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-red);
 }
 
 .avatarButton {

@@ -1,32 +1,64 @@
-/* Container Wrapper Layout */
 .editorWrapper {
-  border: 1px solid #e2e8f0;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
   width: 100%;
   margin: 0;
   overflow: hidden;
-  background: #fff;
   font-family: system-ui, -apple-system, sans-serif;
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
 }
 
-/* Toolbar Menu Panel - NOW STICKY */
+.light {
+  --editor-bg: #ffffff;
+  --editor-border: #e2e8f0;
+  --toolbar-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-body: #334155;
+  --btn-color: #475569;
+  --btn-hover-bg: #f8fafc;
+  --btn-hover-color: #0f172a;
+  --btn-active-bg: #f1f5f9;
+  --code-bg: #f1f5f9;
+  --code-text: #0f172a;
+  --pre-bg: #0f172a;
+  --pre-text: #e2e8f0;
+  --hr-border: #e2e8f0;
+}
+
+.dark {
+  --editor-bg: #18181b;
+  --editor-border: #27272a;
+  --toolbar-bg: #111113;
+  --text-main: #f4f4f5;
+  --text-body: #e4e4e7;
+  --btn-color: #9ca3af;
+  --btn-hover-bg: #27272a;
+  --btn-hover-color: #ffffff;
+  --btn-active-bg: #2d2d30;
+  --code-bg: #27272a;
+  --code-text: #f4f4f5;
+  --pre-bg: #09090b;
+  --pre-text: #e4e4e7;
+  --hr-border: #27272a;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 10; /* Keeps buttons cleanly layered above the running document text */
+  z-index: 10;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--editor-border);
 }
 
-/* Toolbar Buttons */
 .toolbarButton {
   display: inline-flex;
   align-items: center;
@@ -35,41 +67,39 @@
   height: 36px;
   padding: 0;
   background: transparent;
-  color: #475569;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
+  color: var(--btn-color);
 }
 
 .toolbarButton:hover {
-  background: #f8fafc;
-  color: #0f172a;
+  background: var(--btn-hover-bg);
+  color: var(--btn-hover-color);
 }
 
 .buttonActive {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--btn-active-bg);
+  color: var(--btn-hover-color);
 }
 
-/* Vertical Separator lines */
 .divider {
   width: 1px;
   height: 24px;
-  background: #e2e8f0;
   margin: 0 4px;
+  background: var(--editor-border);
 }
 
-/* Text Rich Area Container Window - NOW SCROLLABLE */
 .contentArea {
   padding: 20px;
-  overflow-y: auto;   /* Automatically builds a natural scrollbar inside the text box */
+  overflow-y: auto;
   min-height: 220px;
   height: 100%;
-
+  background: var(--editor-bg);
+  transition: background-color 0.2s ease;
 }
 
-/* --- Tiptap Editor Node Layout Scoping --- */
 .contentArea :global(.tiptap):focus {
   outline: none;
 }
@@ -77,41 +107,41 @@
 .contentArea :global(.tiptap) h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
   margin-top: 0;
   margin-bottom: 12px;
+  color: var(--text-main);
 }
 
 .contentArea :global(.tiptap) p {
-  color: #334155;
   line-height: 1.6;
   margin-bottom: 12px;
+  color: var(--text-body);
 }
 
 .contentArea :global(.tiptap) ul, 
 .contentArea :global(.tiptap) ol {
   padding-left: 24px;
   margin-bottom: 12px;
-  color: #334155;
+  color: var(--text-body);
 }
 
 .contentArea :global(.tiptap) code {
-  background-color: #f1f5f9;
-  color: #0f172a;
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9em;
+  background-color: var(--code-bg);
+  color: var(--code-text);
 }
 
 .contentArea :global(.tiptap) pre {
-  background: #0f172a;
-  color: #e2e8f0;
-  font-family: 'Courier New', Courier, monospace;
   padding: 14px;
   border-radius: 8px;
   overflow-x: auto;
   margin: 14px 0;
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--pre-bg);
+  color: var(--pre-text);
 }
 
 .contentArea :global(.tiptap) pre code {
@@ -122,8 +152,8 @@
 
 .contentArea :global(.tiptap) hr {
   border: none;
-  border-top: 2px solid #e2e8f0;
   margin: 24px 0;
+  border-top: 2px solid var(--hr-border);
 }
 
 .contentArea :global(.tiptap) img {

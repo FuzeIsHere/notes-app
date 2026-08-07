@@ -23,8 +23,8 @@ export async function createNote(note) {
         pinned: false,
         archived: false,
         deleted: false,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        created: serverTimestamp(),
+        updated: serverTimestamp(),
         ...note
     })
 }
@@ -52,7 +52,7 @@ export async function updateNote(id, updates) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         ...updates,
-        updatedAt: serverTimestamp()
+        updated: serverTimestamp()
     })
 }
 
@@ -65,7 +65,7 @@ export async function updateTitle(id, title) {
     return title
 }
 
-export async function switchCategory(id, category) {
+export async function updateCategory(id, category) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         category
@@ -73,10 +73,27 @@ export async function switchCategory(id, category) {
     return category
 }
 
-export async function moveToTrash(id, curr) {
+export async function togglePin(id, curr) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
-        isDeleted: !curr
+        pinned: !curr
+    })
+    return !curr
+}
+
+
+export async function toggleArchive(id, curr) { 
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        archived: !curr
+    })
+    return !curr
+}
+
+export async function toggleTrash(id, curr) {
+    const noteDocRef = doc(db, 'notes', id);
+    await updateDoc(noteDocRef, {
+        deleted: !curr
     })
     return !curr
 }
@@ -84,16 +101,4 @@ export async function moveToTrash(id, curr) {
 export async function deleteNote(id) {
     const noteDocRef = doc(db, 'notes', id);
     await deleteDoc(noteDocRef)
-}
-
-export async function archiveNote(id) { }
-
-export async function restoreNote(id) { }
-
-export async function togglePin(id, curr) {
-    const noteDocRef = doc(db, 'notes', id);
-    await updateDoc(noteDocRef, {
-        isPinned: !curr
-    })
-    return !curr
 }

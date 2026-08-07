@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import NoteEditNavbar from '../components/notes/NoteEditNavbar/NoteEditNavbar'
 import { useParams } from 'react-router-dom'
-import { getNote, switchCategory, togglePin, updateNote, updateTitle } from '../services/notes.service'
+import { getNote, updateCategory, togglePin, updateNote, updateTitle } from '../services/notes.service'
 import RichTextEditor from '../components/notes/RichTextEditor/RichTextEditor'
 import { useDebounce } from '../hooks/useDebounce'
+import { useUI } from '../hooks/useUI'
 
 function EditNote() {
-
   const { id } = useParams();
+  const { theme } = useUI();
 
   const [note, setNote] = useState({ title: '', content: [] })
   const [status, setStatus] = useState('Loading');
@@ -46,7 +47,7 @@ function EditNote() {
     setNote(x => ({ ...x, category: category }))
     setStatus('Saving...')
     dedounceCategory(async () => {
-      await switchCategory(id, category)
+      await updateCategory(id, category)
       setStatus('Saved')   
     })
   }
@@ -62,21 +63,22 @@ function EditNote() {
   }
 
   if (status === 'Loading') {
-    return <p></p>
+    return null
   }
+
+  const isDark = theme === 'dark';
+  const pageBg = isDark ? '#111113' : '#ffffff';
+
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: pageBg, transition: 'background-color 0.2s ease' }}>
       <NoteEditNavbar
         id={id}
         title={note.title}
         setTitle={changeTitle}
-
         category={note.category}
         onCategoryChange={changeCategory}
-
         isPinned={note.isPinned}
         onTogglePin={changePinnedStatus}
-
         saveStatus={status}
       />
       <RichTextEditor content={note.content} handleUpdate={handleContentUpdate} />

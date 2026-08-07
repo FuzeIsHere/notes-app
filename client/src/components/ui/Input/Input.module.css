@@ -12,6 +12,7 @@
   font-size: 14px;
   font-weight: 500;
   color: #374151; /* Neutral dark gray */
+  transition: color 0.15s ease;
 }
 
 /* Base input field styling */
@@ -23,7 +24,7 @@
   background-color: #ffffff;
   color: #111827;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
 /* Smooth focus rings matching the button design language */
@@ -39,7 +40,7 @@
   cursor: not-allowed;
 }
 
-/* Error variations (Crucial for MAANG code reviews) */
+/* Error variations */
 .errorInput {
   border-color: #dc2626 !important;
 }
@@ -51,4 +52,49 @@
   font-size: 13px;
   color: #dc2626;
   margin-top: 2px;
+}
+
+
+/* ==========================================================================
+   DARK THEME OVERRIDES 
+   Triggered securely via the .dark parent hook selector
+   ========================================================================== */
+
+.dark .label {
+  color: #d4d4d8; /* Zinc-300 accessible reading contrast */
+}
+
+.dark .input {
+  background-color: #18181b; /* Zinc-900 input well look */
+  border-color: #3f3f46;     /* Zinc-700 outline separator */
+  color: #f4f4f5;            /* Zinc-100 high-fidelity text values */
+}
+
+/* Update placeholder values cleanly for dark mode typing */
+.dark .input::placeholder {
+  color: #71717a; /* Zinc-500 mute color */
+}
+
+.dark .input:focus {
+  border-color: #3b82f6; /* Brighter accessibility blue for dark canvases */
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+}
+
+.dark .input:disabled {
+  background-color: #27272a; /* Zinc-800 disabled well look */
+  color: #52525b;            /* Zinc-600 soft strike visibility */
+  border-color: #27272a;
+}
+
+/* Dark mode error parameters to balance accessibility metrics */
+.dark .errorInput {
+  border-color: #f87171 !important; /* Softened crimson to resolve eye strain */
+}
+
+.dark .errorInput:focus {
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.25);
+}
+
+.dark .errorMessage {
+  color: #f87171;
 }
