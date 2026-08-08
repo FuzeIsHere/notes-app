@@ -64,15 +64,17 @@ export const Sidebar = ({
                     {/* Categories Sub-list */}
                     <div className={styles.categorySection}>
                         <span className={styles.label}>CATEGORIES</span>
-                        {categories.map(cat => (
-                            <button
-                                key={cat}
-                                className={[styles.subBtn, active === cat.toLowerCase() ? styles.active : ''].join(' ')}
-                                onClick={() => setActive(cat.toLowerCase())}
-                            >
-                                • {cat}
-                            </button>
-                        ))}
+                        <div className={styles.subContainer}>
+                            {categories.map(cat => (
+                                <button
+                                    key={cat}
+                                    className={[styles.subBtn, active === cat.toLowerCase() ? styles.active : ''].join(' ')}
+                                    onClick={() => setActive(cat.toLowerCase())}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     <button

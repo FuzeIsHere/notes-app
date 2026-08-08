@@ -17,16 +17,19 @@ const useNotesStore = create(persist((set, get) => ({
     // --- STATE VARIABLES ---
     notes: [],
     loading: true,
+    updating: false,
     error: null,
 
     // --- STATE ACTIONS ---
     actions: {
         updateLocalNote: (id, changes) => {
+            set({ updating: true });
             set(state => ({
                 notes: state.notes.map(note =>
                     note.id === id ? { ...note, ...changes } : note
                 )
             }));
+            set({ updating: false });
         },
 
         refresh: async () => {

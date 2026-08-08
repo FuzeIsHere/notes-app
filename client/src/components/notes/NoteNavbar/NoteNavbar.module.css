@@ -1,7 +1,5 @@
 .navbar {
   width: 100%;
-  height: 60px;
-  min-height: 60px;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -23,18 +21,18 @@
 }
 
 .dark {
-  --nav-bg: #18181b;
+  --nav-bg: #111113;
   --nav-border: #27272a;
   --text-main: #f4f4f5;
   --text-muted: #a1a1aa;
   --text-light: #71717a;
   --hover-bg: #27272a;
-  --accent-red: #f87171;
+  --accent-red: #eab308;
   --accent-blue: #3b82f6;
 }
 
 .navContainer {
-  height: 100%;
+  height: 60px;
   margin: 0 auto;
   padding: 0 18px;
   display: flex;
@@ -43,10 +41,104 @@
   gap: 16px;
 }
 
+.containerMobile {
+  height: auto;
+  padding: 10px 18px;
+  display: grid;
+  grid-template-columns: 1fr auto; /* Dynamically sizes right content columns */
+  gap: 12px;
+}
+
 .leftSection {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.titleContainer {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; 
+}
+
+.titleMobileRow {
+  grid-column: span 2;
+  max-width: 100%;
+}
+
+.marqueeWrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+/* Base style for title preview state */
+.titleText {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-main);
+  padding: 5px 0;
+  margin: 0;
+  cursor: text;
+  width: max-content;
+  border-bottom: 1px solid transparent; /* Prevents height jumping when switching */
+}
+
+.titleText.canAnimate {
+  padding-right: 16px;
+  animation: bounceMarquee 3.5s ease-in-out infinite alternate;
+}
+
+/* Style for text input state with an active theme-based bottom border */
+.titleInput {
+  width: 100%;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-main);
+  border: none;
+  border-bottom: 1px solid var(--accent-blue); /* Subtle blue indicator border */
+  background: transparent;
+  padding: 5px 0;
+  margin: 0;
+  outline: none;
+  box-sizing: border-box;
+  animation: fadeInBorder 0.15s ease-out forwards;
+}
+
+.titleInput::placeholder {
+  color: var(--text-light);
+}
+
+@keyframes fadeInBorder {
+  from { border-bottom-color: transparent; }
+  to { border-bottom-color: var(--accent-blue); }
+}
+
+@keyframes bounceMarquee {
+  0%, 20% {
+    transform: translate3d(0, 0, 0);
+  }
+  80%, 100% {
+    transform: translate3d(var(--scroll-dist), 0, 0);
+  }
 }
 
 .menuButton {
@@ -81,41 +173,13 @@
   font-size: 1.1rem;
   color: var(--text-main);
   text-decoration: none;
-  letter-spacing: -0.025em;
-}
-
-.titleContainer {
-  flex: 1;
-  max-width: 500px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.titleInput {
-  flex: 1;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-main);
-  border: none;
-  background: transparent;
-  padding: 6px 0;
-  width: 100%;
-  transition: border-color 0.15s;
-}
-
-.titleInput:focus {
-  outline: none;
-}
-
-.titleInput::placeholder {
-  color: var(--text-light);
 }
 
 .categoryWrapper {
   position: relative;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .categorySelect {
@@ -148,6 +212,7 @@
   color: var(--text-muted);
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
+  flex-shrink: 0;
 }
 
 .actionIconButton:hover {
@@ -165,12 +230,6 @@
 
 .pinnedButton:hover {
   color: var(--accent-red);
-}
-
-.rightSection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .deleteButton {

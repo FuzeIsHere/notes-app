@@ -9,6 +9,7 @@ import useNotesStore from '../store/useNotesStore'
 import Navbar from '../components/ui/Navbar/Navbar'
 import { Sidebar } from '../components/ui/Sidebar/Sidebar'
 import { NotesGrid } from '../components/notes/NotesGrid/NotesGrid'
+import { useMenu } from '../hooks/useMenu'
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,15 +17,13 @@ const Dashboard = () => {
   const [showSide, setShowSide] = useState(device === 'desktop');
 
   const notes = useNotesStore(state => state.notes)
-
   const refresh = useNotesStore(state => state.actions.refresh);
-  const archive = useNotesStore(state => state.actions.archive);
-  const unarchive = useNotesStore(state => state.actions.unarchive);
-  const moveToTrash = useNotesStore(state => state.actions.moveToTrash);
-  const restoreFromTrash = useNotesStore(state => state.actions.restoreFromTrash);
-  const permanentlyDelete = useNotesStore(state => state.actions.permanentlyDelete);
+  const addNote = useNotesStore(state => state.addNote);
 
   const [search, setSearch] = useState('');
+  const [selectedView, setSelectedView] = useState('all')
+  const [displayNotes, setDisplayNotes] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const sidebarItems = [
     { id: "all", label: "All Notes", type: "system" },
@@ -35,36 +34,13 @@ const Dashboard = () => {
     { id: "trash", label: "Trash", type: "system" },
   ];
 
+  const menuOptions = 
+    selectedView === 'trash' ? ['restore', 'delete'] : 
+    selectedView === 'archive' ? ['unarchive', 'trash'] :
+    ['edit', 'archive', 'trash'];
 
-  const menuMaker = (keys) => {
-    //const s = key => useNotesStore(state => state[key])
-    const menuOptions = {
-      edit: id => ({ label: 'Edit', action: () => window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer') }),
-      archive: id => ({ label: 'Archive', action: async () => { await archive(id); } }),
-      unarchive: id => ({ label: 'Unarchive', action: async () => { await unarchive(id); } }),
-      trash: id => ({ label: 'Delete', action: async () => { await moveToTrash(id); } }),
-      restore: id => ({ label: 'Restore', action: async () => { await restoreFromTrash(id); } }),
-      delete: id => ({ label: 'Permanently delete', action: async () => { await permanentlyDelete(id); } }),
-    };
-    return (id) => {
-      let menu = []
-      for (const key of keys) menu.push((menuOptions[key])(id))
-      return menu
-    }
-  }
-
-
-  const [selectedView, setSelectedView] = useState('all')
-  const [displayNotes, setDisplayNotes] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  const getMenu = () => {
-    switch (selectedView) {
-      case 'archive': return menuMaker(['unarchive', 'trash']);
-      case 'trash': return menuMaker(['restore', 'delete']);
-      default: return menuMaker(['edit', 'archive', 'trash'])
-    }
-  }
+  const currentMenu = useMenu(menuOptions); 
+  
   const updateDisplayNotes = async () => {
     let copy = [...notes]
     const viewFilter = sidebarItems.find(x => x.id === selectedView)
@@ -101,7 +77,7 @@ const Dashboard = () => {
   }, [notes, search, selectedView])
 
   const handleCreateNote = async () => {
-    const { id } = await useNotesStore(state => state.addNote)();
+    const { id } = await addNote();
     window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer');
   }
 
@@ -115,7 +91,7 @@ const Dashboard = () => {
       <Navbar
         search={search} setSearch={setSearch}
         setShowSide={setShowSide}
-        buttons={[{ name: '+ Note', event: handleCreateNote }]}
+        buttons={[{ name: 'Note', event: handleCreateNote }]}
       />
       <div style={{ display: 'flex', flexGrow: 1, minHeight: 0 }}>
         <Sidebar
@@ -125,7 +101,7 @@ const Dashboard = () => {
           setActive={setSelectedView}
         />
         {!loading ? (
-          <NotesGrid notes={displayNotes} menu={getMenu()} />
+          <NotesGrid notes={displayNotes} menu={currentMenu} />
         ) : (
           <div style={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center', fontFamily: 'system-ui, sans-serif', color: textClr }}>
             <p>Loading your space...</p>

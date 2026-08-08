@@ -95,6 +95,14 @@ function EditNote() {
     return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Note not found.</div>;
   }
 
+  if (note.archived) {
+    return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Unarchive the note to edit.</div>;
+  }
+
+  if (note.deleted) {
+    return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Restore the note to edit.</div>;
+  }
+
   const isDark = theme === 'dark';
   const pageBg = isDark ? '#111113' : '#ffffff';
 

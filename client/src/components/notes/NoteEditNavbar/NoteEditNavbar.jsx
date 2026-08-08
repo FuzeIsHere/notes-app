@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './NoteEditNavbar.module.css';
 import { useUI } from '../../../hooks/useUI';
 import { useAuth } from '../../../hooks/useAuth';
@@ -21,12 +21,64 @@ const NoteEditNavbar = ({
 	const { device, theme } = useUI();
 	const { user } = useAuth();
 
+	const [isEditing, setIsEditing] = useState(false);
+	const [isOverflowing, setIsOverflowing] = useState(false);
+	const [scrollDistance, setScrollDistance] = useState(0);
+
+	const wrapperRef = useRef(null);
+	const textRef = useRef(null);
+	const inputRef = useRef(null);
+
+	// Auto-focuses the text field when moving into active editing state
+	useEffect(() => {
+		if (isEditing && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [isEditing]);
+
+	// Measures real span dimensions cleanly across screen updates
+	useEffect(() => {
+		if (isEditing) return;
+
+		const checkOverflow = () => {
+			if (!textRef.current || !wrapperRef.current) return;
+			
+			const containerWidth = wrapperRef.current.clientWidth;
+			const textWidth = textRef.current.offsetWidth;
+
+			if (textWidth > containerWidth) {
+				setIsOverflowing(true);
+				setScrollDistance(textWidth - containerWidth + 16);
+			} else {
+				setIsOverflowing(false);
+				setScrollDistance(0);
+			}
+		};
+
+		checkOverflow();
+
+		const resizeObserver = new ResizeObserver(checkOverflow);
+		if (wrapperRef.current) {
+			resizeObserver.observe(wrapperRef.current);
+		}
+
+		return () => resizeObserver.disconnect();
+	}, [title, device, isEditing]);
+
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			setIsEditing(false);
+		}
+	};
+
+	const isMobile = device === 'mobile';
+
 	return (
 		<header className={`${styles.navbar} ${styles[theme]}`}>
 			<div className={styles.navContainer}>
 
 				<div className={styles.leftSection}>
-					{device === 'mobile' && setShowSide && (
+					{isMobile && setShowSide && (
 						<button
 							type="button"
 							className={styles.menuButton}
@@ -39,18 +91,34 @@ const NoteEditNavbar = ({
 					<Link to={`/notes/${id}`} className={styles.backLink} title="Back to dashboard">
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
 					</Link>
-					{device !== 'mobile' && <span className={styles.logo}>CoNotate</span>}
+					{!isMobile && <span className={styles.logo}>CoNotate</span>}
 				</div>
 
 				<div className={styles.titleContainer}>
-					<input
-						type="text"
-						id="note-title-input"
-						placeholder="Untitled Note"
-						value={title}
-						onChange={(e) => setTitle?.(e.target.value)}
-						className={styles.titleInput}
-					/>
+					<div ref={wrapperRef} className={styles.marqueeWrapper}>
+						{isEditing ? (
+							<input
+								ref={inputRef}
+								type="text"
+								id="note-title-input"
+								placeholder="Untitled Note"
+								value={title}
+								onChange={(e) => setTitle?.(e.target.value)}
+								onBlur={() => setIsEditing(false)}
+								onKeyDown={handleKeyDown}
+								className={styles.titleInput}
+							/>
+						) : (
+							<span
+								ref={textRef}
+								onClick={() => setIsEditing(true)}
+								className={`${styles.titleText} ${isOverflowing ? styles.canAnimate : ''}`}
+								style={{ '--scroll-dist': `-${scrollDistance}px` }}
+							>
+								{title || 'Untitled Note'}
+							</span>
+						)}
+					</div>
 
 					<div className={styles.categoryWrapper}>
 						<select
@@ -92,7 +160,7 @@ const NoteEditNavbar = ({
 						</button>
 					)}
 
-					{device !== 'mobile' && (
+					{!isMobile && (
 						<>
 							{!!user ? (
 								<button type="button" className={styles.avatarButton} aria-label="User profile">

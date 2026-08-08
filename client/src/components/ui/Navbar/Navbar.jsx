@@ -4,6 +4,7 @@ import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { useUI } from '../../../hooks/useUI';
 import { useAuth } from '../../../hooks/useAuth';
+import { Plus } from 'lucide-react'; // Added modern icon
 
 const Navbar = ({
 	search = '',
@@ -39,7 +40,9 @@ const Navbar = ({
 						onClick={event}
 						className={isNoteBtn ? styles.noteButton : styles.defaultButton}
 					>
-						{name}
+						{/* Render icon if it's the Note button */}
+						{isNoteBtn && <Plus size={16} strokeWidth={2.5} />}
+						<span>{name}</span>
 					</button>
 				);
 			})}
@@ -47,12 +50,10 @@ const Navbar = ({
 	);
 
 	return (
-		/* Replaced the arbitrary ternary string with direct style class mapping mapping */
 		<header className={`${styles.navbar} ${styles[theme]}`}>
 			<div className={isMobile ? styles.navContainerMobile : styles.navContainerDesktop}>
 				
 				{isMobile ? (
-					/* MOBILE ROUTING */
 					<>
 						<div className={styles.topRowMobile}>
 							<div className={styles.leftSection}>
@@ -71,7 +72,6 @@ const Navbar = ({
 						{SearchBar}
 					</>
 				) : (
-					/* DESKTOP & TABLET ROUTING */
 					<>
 						<div className={styles.leftSection}>
 							<a href="/" className={styles.logo}>CoNotate</a>

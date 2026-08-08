@@ -7,14 +7,24 @@ import { useUI } from '../hooks/useUI'
 
 import useNotesStore from '../store/useNotesStore'
 
+import { useMenu } from '../hooks/useMenu'
+
 function ViewNote() {
   const { id } = useParams();
   const { theme } = useUI();
 
-  const [note, setNote] = useState({ title: '', content: [] })
+  const [note, setNote] = useState({ title: '', content: [], archived: true, deleted: true })
   const [status, setStatus] = useState('Loading');
 
+  const notes = useNotesStore(state => state.notes)
   const isStoreLoading = useNotesStore(state => state.loading);
+
+  const menuOptions = 
+    note.deleted ? ['restore', 'delete'] : 
+    note.archived ? ['unarchive', 'trash'] :
+    ['edit', 'archive', 'trash'];
+
+  const currentMenu = useMenu(menuOptions);
 
   const {
     read,
@@ -29,7 +39,7 @@ function ViewNote() {
       setNote(await read(id))
       setStatus('Saved')
     })()
-  }, [])
+  }, [notes])
 
   const debounceTitle = useDebounce(500);
   const changeTitle = async (title) => {
@@ -81,8 +91,9 @@ function ViewNote() {
         setTitle={changeTitle}
         category={note.category}
         onCategoryChange={changeCategory}
-        isPinned={note.pinned}
+        pinned={note.pinned}
         onTogglePin={changePinnedStatus}
+        menuOptions={currentMenu(id)}
       />
       <RichTextViewer content={note.content} />
     </div>
