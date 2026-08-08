@@ -40,12 +40,11 @@ export async function getNote(id) {
         const noteDocRef = doc(db, 'notes', id)
         const docSnap = await getDoc(noteDocRef)
 
-        if (docSnap.exists()) return docSnap.data();
-        else return null;
+        if (docSnap.exists()) return {id: docSnap.id, ...docSnap.data()};
+        else throw 'no such note exists'
     } catch (error) {
         throw error;
     }
-
 }
 
 export async function updateNote(id, updates) {

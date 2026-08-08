@@ -17,7 +17,7 @@ const Navbar = ({
 
 	// Shared Search Component
 	const SearchBar = (
-		<div className={styles.searchContainer}>
+		<div className={styles.searchContainer} style={{maxWidth: isMobile ? 'none' : '500px'}}>
 			<Input
 				id="global-search"
 				placeholder="Search..."

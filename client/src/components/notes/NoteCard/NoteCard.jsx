@@ -1,20 +1,24 @@
 import React, { useRef, useState } from 'react';
 import styles from './NoteCard.module.css';
 import { useUI } from '../../../hooks/useUI';
-import { togglePin } from '../../../services/notes.service';
+
+import useNotesStore from '../../../store/useNotesStore';
 
 export const NoteCard = ({
 	id,
-	title,
-	preview = '',
-	category = '',
-	updatedAt,
-	ipinned = false,
 	onMenuClick,
 	isMenuOpen
 }) => {
+	const { read, pin, unpin } = useNotesStore(x => x.actions)
+	const {
+		title,
+		preview,
+		category,
+		updated,
+		pinned
+	} = useNotesStore(x => x.notes).find(x => x.id === id)
+
 	const { theme } = useUI();
-	const [pinned, setPinned] = useState(ipinned);
 
 	const cardClassName = `${styles.card} ${styles[theme]}`;
 	const pinClassName = `${styles.actionButton} ${pinned ? styles.pinActive : ''}`;
@@ -28,7 +32,8 @@ export const NoteCard = ({
 	};
 
 	const onPinClick = async () => {
-		setPinned(await togglePin(id, pinned));
+		if(pinned) await unpin(id)
+		else await pin(id)
 	};
 
 	return (
@@ -73,8 +78,8 @@ export const NoteCard = ({
 					</div>
 				)}
 				<span className={styles.timestamp}>
-					{updatedAt && typeof updatedAt.toDate === 'function' 
-						? updatedAt.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) 
+					{updated && typeof updated.toDate === 'function' 
+						? updated.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) 
 						: ''}
 				</span>
 			</div>

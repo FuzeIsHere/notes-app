@@ -143,7 +143,7 @@ const MenuBar = ({ editor }) => {
   )
 }
 
-export default function ComprehensiveEditor({ content = '', handleUpdate = null }) {
+export default function ComprehensiveEditor({ content = '', handleUpdate = null, setStatus }) {
   const { theme } = useUI()
   const timeout = useRef(null)
 
@@ -161,6 +161,7 @@ export default function ComprehensiveEditor({ content = '', handleUpdate = null 
     ],
     content: content,
     onUpdate: ({ editor }) => {
+      if(setStatus) setStatus('Saving...')
       if (timeout.current) clearTimeout(timeout.current)
       timeout.current = setTimeout(() => {
         const preview =

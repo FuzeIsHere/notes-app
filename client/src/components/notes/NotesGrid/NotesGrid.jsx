@@ -18,8 +18,6 @@ export const NotesGrid = ({ notes = [], menu}) => {
   };
   const menuOptions = menu(activeNoteId)
 
-  console.log(1)
-
   if (notes.length === 0) {
     return (
       <div className={`${styles.emptyStateContainer} ${styles[theme]}`}>
@@ -34,11 +32,6 @@ export const NotesGrid = ({ notes = [], menu}) => {
         <NoteCard 
           key={note.id}
           id={note.id}
-          title={note.title} 
-          preview={note.preview}
-          category={note.category}
-          updatedAt={note.updatedAt}
-          ipinned={note.isPinned}
           onMenuClick={handleMenuClick}
           isMenuOpen={activeNoteId === note.id}
         />

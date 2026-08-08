@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import NoteNavbar from '../components/notes/NoteNavbar/NoteNavbar'
 import { useParams } from 'react-router-dom'
-import { getNote, updateCategory, togglePin, updateTitle } from '../services/notes.service'
 import { useDebounce } from '../hooks/useDebounce'
 import RichTextViewer from '../components/notes/RichTextViewer/RichTextViewer'
 import { useUI } from '../hooks/useUI'
+
+import useNotesStore from '../store/useNotesStore'
 
 function ViewNote() {
   const { id } = useParams();
@@ -13,43 +14,57 @@ function ViewNote() {
   const [note, setNote] = useState({ title: '', content: [] })
   const [status, setStatus] = useState('Loading');
 
+  const isStoreLoading = useNotesStore(state => state.loading);
+
+  const {
+    read,
+    setTitle,
+    setCategory,
+    pin,
+    unpin,
+  } = useNotesStore(x => x.actions);
+
   useEffect(() => {
     (async () => {
-      setNote(await getNote(id))
+      setNote(await read(id))
       setStatus('Saved')
     })()
   }, [])
 
-  const dedounceTitle = useDebounce(500)
+  const debounceTitle = useDebounce(500);
   const changeTitle = async (title) => {
-    setNote(x => ({ ...x, title: title }))
-    setStatus('Saving...')
+    setNote(x => ({ ...x, title: title }));
+    setStatus('Saving...');
+    debounceTitle(async () => {
+      await setTitle(id, title);
+      setStatus('Saved');
+    });
+  };
 
-    dedounceTitle(async () => {
-      await updateTitle(id, title)
-      setStatus('Saved')
-    })
-  }
-
-  const dedounceCategory = useDebounce(500)
+  const debounceCategory = useDebounce(500);
   const changeCategory = async (category) => {
-    setNote(x => ({ ...x, category: category }))
-    setStatus('Saving...')
-    dedounceCategory(async () => {
-      await updateCategory(id, category)
-      setStatus('Saved')   
-    })
-  }
+    setNote(x => ({ ...x, category: category }));
+    setStatus('Saving...');
+    debounceCategory(async () => {
+      await setCategory(id, category);
+      setStatus('Saved');
+    });
+  };
 
-  const dedouncePin = useDebounce(500)
+  const debouncePin = useDebounce(500);
   const changePinnedStatus = async () => {
-    setNote(x => ({ ...x, isPinned: !x.isPinned }))
-    setStatus('Saving...')
-    dedouncePin(async () => {
-      await togglePin(id, note.isPinned)
-      setStatus('Saved')
-    })
-  }
+    const nextPinnedValue = !note.pinned;
+    setNote(x => ({ ...x, pinned: nextPinnedValue }));
+    setStatus('Saving...');
+    debouncePin(async () => {
+      if (note.pinned) {
+        await unpin(id);
+      } else {
+        await pin(id);
+      }
+      setStatus('Saved');
+    });
+  };
 
   if (status === 'Loading') {
     return null
@@ -66,7 +81,7 @@ function ViewNote() {
         setTitle={changeTitle}
         category={note.category}
         onCategoryChange={changeCategory}
-        isPinned={note.isPinned}
+        isPinned={note.pinned}
         onTogglePin={changePinnedStatus}
       />
       <RichTextViewer content={note.content} />

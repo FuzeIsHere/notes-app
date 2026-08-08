@@ -14,13 +14,16 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { device, theme } = useUI();
   const [showSide, setShowSide] = useState(device === 'desktop');
+
   const notes = useNotesStore(state => state.notes)
-  const refresh = useNotesStore(state => state.refresh)
-  const archive = useNotesStore(state => state.archive)
-  const unarchive = useNotesStore(state => state.unarchive)
-  const moveToTrash = useNotesStore(state => state.moveToTrash)
-  const restoreFromTrash = useNotesStore(state => state.restoreFromTrash)
-  const permanentlyDelete = useNotesStore(state => state.permanentlyDelete)
+
+  const refresh = useNotesStore(state => state.actions.refresh);
+  const archive = useNotesStore(state => state.actions.archive);
+  const unarchive = useNotesStore(state => state.actions.unarchive);
+  const moveToTrash = useNotesStore(state => state.actions.moveToTrash);
+  const restoreFromTrash = useNotesStore(state => state.actions.restoreFromTrash);
+  const permanentlyDelete = useNotesStore(state => state.actions.permanentlyDelete);
+
   const [search, setSearch] = useState('');
 
   const sidebarItems = [
@@ -34,7 +37,7 @@ const Dashboard = () => {
 
 
   const menuMaker = (keys) => {
-    const s = key => useNotesStore(state => state[key])
+    //const s = key => useNotesStore(state => state[key])
     const menuOptions = {
       edit: id => ({ label: 'Edit', action: () => window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer') }),
       archive: id => ({ label: 'Archive', action: async () => { await archive(id); } }),
@@ -83,13 +86,15 @@ const Dashboard = () => {
       if (a.pinned === b.pinned) return b.createdAt - a.createdAt;
       else return a.pinned ? -1 : 1;
     })
+
+    copy = copy.map(x => ({id: x.id}))
     setDisplayNotes(copy)
     setLoading(false)
   }
 
   useEffect(() => {
     refresh();
-  }, [refresh])
+  }, [])
 
   useEffect(() => {
     updateDisplayNotes()
