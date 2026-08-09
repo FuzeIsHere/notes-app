@@ -5,6 +5,8 @@ import RichTextEditor from '../components/notes/RichTextEditor/RichTextEditor'
 import { useDebounce } from '../hooks/useDebounce'
 import { useUI } from '../hooks/useUI'
 import useNotesStore from '../store/useNotesStore'
+import NotFound from './NotFound'
+import Loading from './Loading'
 
 function EditNote() {
   const { id } = useParams();
@@ -32,12 +34,8 @@ function EditNote() {
     const initialize = async () => {
       if (!isStoreLoading) {
         const existingNote = await read(id);
-        if (existingNote) {
-          setNote(existingNote);
-          setIsReady(true);
-        } else if (notesInStore.length > 0) {
-          setIsReady(true);
-        }
+        setNote(existingNote);
+        setIsReady(true);
       }
     }
     initialize()
@@ -87,20 +85,19 @@ function EditNote() {
 
   // 3. Conditional UI Rendering Guards
   if (!isReady || (isStoreLoading && notesInStore.length === 0)) {
-    return null; // Stays clean while background fetch runs
+    return <Loading />; // Stays clean while background fetch runs
   }
 
-  const currentNoteExists = read(id);
-  if (!currentNoteExists) {
-    return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Note not found.</div>;
+  if (!note) {
+    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`}/>
   }
 
   if (note.archived) {
-    return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Unarchive the note to edit.</div>;
+    return <NotFound msg={'Unarchive the note to edit.'} showFor={4000} to={`/notes/${id}`}/>
   }
 
   if (note.deleted) {
-    return <div style={{ color: theme === 'dark' ? '#fff' : '#000', padding: '20px' }}>Restore the note to edit.</div>;
+    return <NotFound msg={'Restore the note to edit.'} showFor={4000} to={`/notes/${id}`}/>
   }
 
   const isDark = theme === 'dark';

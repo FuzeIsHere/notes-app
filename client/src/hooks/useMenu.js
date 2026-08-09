@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useNotesStore from "../store/useNotesStore";
-
+import {useNavigate} from 'react-router-dom'
 export const useMenu = (keys) => {
 
     const archive = useNotesStore(state => state.actions.archive);
@@ -9,13 +9,15 @@ export const useMenu = (keys) => {
     const restoreFromTrash = useNotesStore(state => state.actions.restoreFromTrash);
     const permanentlyDelete = useNotesStore(state => state.actions.permanentlyDelete);
 
+    const navigate = useNavigate();
+
     const menuOptions = {
-        edit: id => ({ label: 'Edit', action: () => window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer') }),
+        edit: id => ({ label: 'Edit', action: () => navigate(`/notes/${id}/edit`) }),//window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer') }),
         archive: id => ({ label: 'Archive', action: async () => { await archive(id); } }),
         unarchive: id => ({ label: 'Unarchive', action: async () => { await unarchive(id); } }),
         trash: id => ({ label: 'Delete', action: async () => { await moveToTrash(id); } }),
         restore: id => ({ label: 'Restore', action: async () => { await restoreFromTrash(id); } }),
-        delete: id => ({ label: 'Permanently delete', action: async () => { await permanentlyDelete(id); } }),
+        delete: id => ({ label: 'Permanently delete', action: async () => { await permanentlyDelete(id); navigate('/dashboard')} }),
     };
     return (id) => {
         let menu = []

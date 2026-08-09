@@ -1,22 +1,22 @@
 import React, { useRef, useState } from 'react';
 import styles from './NoteCard.module.css';
 import { useUI } from '../../../hooks/useUI';
-
+import { useNavigate } from 'react-router-dom';
 import useNotesStore from '../../../store/useNotesStore';
 
 export const NoteCard = ({
 	id,
+	title,
+	preview,
+	category,
+	updated,
+	pinned,
+	isMenuOpen,
 	onMenuClick,
-	isMenuOpen
 }) => {
+	const navigate = useNavigate()
 	const { read, pin, unpin } = useNotesStore(x => x.actions)
-	const {
-		title,
-		preview,
-		category,
-		updated,
-		pinned
-	} = useNotesStore(x => x.notes).find(x => x.id === id)
+	const note = useNotesStore(x => x.notes).find(x => x.id === id)
 
 	const { theme } = useUI();
 
@@ -28,14 +28,14 @@ export const NoteCard = ({
 		if (!headerRef.current) return;
 		const headerRect = headerRef.current.getBoundingClientRect();
 		if (e.clientY <= headerRect.bottom) return;
-		window.open(`/notes/${id}`, '_blank', 'noopener,noreferrer');
+		navigate(`/notes/${id}`)
 	};
 
 	const onPinClick = async () => {
-		if(pinned) await unpin(id)
+		if (pinned) await unpin(id)
 		else await pin(id)
 	};
-
+	
 	return (
 		<div className={cardClassName} onClick={openView}>
 			<div className={styles.headerRow} onClick={e => e.stopPropagation()} ref={headerRef}>
@@ -78,8 +78,8 @@ export const NoteCard = ({
 					</div>
 				)}
 				<span className={styles.timestamp}>
-					{updated && typeof updated.toDate === 'function' 
-						? updated.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) 
+					{updated && typeof updated.toDate === 'function'
+						? updated.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 						: ''}
 				</span>
 			</div>

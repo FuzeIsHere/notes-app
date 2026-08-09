@@ -47,8 +47,9 @@ const useNotesStore = create(persist((set, get) => ({
         addNote: async (preState = {}) => {
             const { id, data } = await createNote(preState);
             set((state) => ({
-                notes: [...state.notes, { id, ...data() }]
+                notes: [...state.notes, { id, ...data }]
             }));
+            return id;
         },
 
         read: async (id) => {
@@ -67,7 +68,7 @@ const useNotesStore = create(persist((set, get) => ({
 
                 return freshNote;
             } catch (err) {
-                console.error(err);
+                //console.error(err);
                 return null;
             }
         },

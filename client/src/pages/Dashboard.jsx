@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const notes = useNotesStore(state => state.notes)
   const refresh = useNotesStore(state => state.actions.refresh);
-  const addNote = useNotesStore(state => state.addNote);
+  const addNote = useNotesStore(state => state.actions.addNote);
 
   const [search, setSearch] = useState('');
   const [selectedView, setSelectedView] = useState('all')
@@ -63,7 +63,7 @@ const Dashboard = () => {
       else return a.pinned ? -1 : 1;
     })
 
-    copy = copy.map(x => ({id: x.id}))
+    //copy = copy.map(x => ({id: x.id}))
     setDisplayNotes(copy)
     setLoading(false)
   }
@@ -77,8 +77,9 @@ const Dashboard = () => {
   }, [notes, search, selectedView])
 
   const handleCreateNote = async () => {
-    const { id } = await addNote();
-    window.open(`/notes/${id}/edit`, '_blank', 'noopener,noreferrer');
+    //console.log(typeof addNote, addNote)
+    const id = await addNote();
+    navigate(`/notes/${id}/edit`);
   }
 
   // Dynamic variable styles mapping dark and light variants natively

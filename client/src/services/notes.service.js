@@ -5,7 +5,7 @@ const x = collection(db, 'notes')
 //const ownerId = auth.currentUser.uid;
 
 export async function createNote(note) {
-    return await addDoc(x, {
+    const data = {
         ownerId: auth.currentUser.uid,
         collaborators: [],
 
@@ -26,7 +26,9 @@ export async function createNote(note) {
         created: serverTimestamp(),
         updated: serverTimestamp(),
         ...note
-    })
+    };
+    const { id } = await addDoc(x, data)
+    return {id, data};
 }
 
 export async function getNotes(userId) {

@@ -29,6 +29,10 @@ export const Sidebar = ({
         await logout();
         navigate('/login');
     };
+    const setActiveWrapper = (view) => {
+        if(!isNotMobile) onClose()
+        setActive(view)
+    }
 
     return (
         <>
@@ -56,7 +60,7 @@ export const Sidebar = ({
                 <div className={styles.nav}>
                     <button
                         className={[styles.btn, active === 'all' ? styles.active : ''].join(' ')}
-                        onClick={() => setActive('all')}
+                        onClick={() => setActiveWrapper('all')}
                     >
                         📝 All Notes
                     </button>
@@ -69,7 +73,7 @@ export const Sidebar = ({
                                 <button
                                     key={cat}
                                     className={[styles.subBtn, active === cat.toLowerCase() ? styles.active : ''].join(' ')}
-                                    onClick={() => setActive(cat.toLowerCase())}
+                                    onClick={() => setActiveWrapper(cat.toLowerCase())}
                                 >
                                     {cat}
                                 </button>
@@ -79,14 +83,14 @@ export const Sidebar = ({
 
                     <button
                         className={[styles.btn, active === 'archive' ? styles.active : ''].join(' ')}
-                        onClick={() => setActive('archive')}
+                        onClick={() => setActiveWrapper('archive')}
                     >
                         📥 Archive
                     </button>
 
                     <button
                         className={[styles.btn, active === 'trash' ? styles.active : ''].join(' ')}
-                        onClick={() => setActive('trash')}
+                        onClick={() => setActiveWrapper('trash')}
                     >
                         🗑️ Trash
                     </button>

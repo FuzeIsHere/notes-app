@@ -4,7 +4,7 @@ import { NoteCard } from '../NoteCard/NoteCard';
 import { Dropdown } from '../../ui/Dropdown/Dropdown';
 import styles from './NotesGrid.module.css';
 
-export const NotesGrid = ({ notes = [], menu}) => {
+export const NotesGrid = ({ notes = [], menu }) => {
 
   const { device, theme } = useUI();
   const [popupTarget, setPopupTarget] = useState(null);
@@ -29,9 +29,14 @@ export const NotesGrid = ({ notes = [], menu}) => {
   return (
     <div className={gridClassName}>
       {notes.map(note => (
-        <NoteCard 
+        <NoteCard
           key={note.id}
           id={note.id}
+          title={note.title}
+          preview={note.preview}d
+          category={note.category}
+          updated={note.updated}
+          pinned={note.pinned}
           onMenuClick={handleMenuClick}
           isMenuOpen={activeNoteId === note.id}
         />

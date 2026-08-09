@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound'
 
 import ViewNote from './pages/ViewNote'
 import EditNote from './pages/EditNote'
+import Loading from './pages/Loading';
 
 function App() {
   const [count, setCount] = useState(0)

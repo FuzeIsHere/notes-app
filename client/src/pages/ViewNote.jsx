@@ -8,6 +8,8 @@ import { useUI } from '../hooks/useUI'
 import useNotesStore from '../store/useNotesStore'
 
 import { useMenu } from '../hooks/useMenu'
+import NotFound from './NotFound'
+import Loading from './Loading'
 
 function ViewNote() {
   const { id } = useParams();
@@ -18,7 +20,6 @@ function ViewNote() {
 
   const notes = useNotesStore(state => state.notes)
   const isStoreLoading = useNotesStore(state => state.loading);
-
   const menuOptions = 
     note.deleted ? ['restore', 'delete'] : 
     note.archived ? ['unarchive', 'trash'] :
@@ -33,10 +34,15 @@ function ViewNote() {
     pin,
     unpin,
   } = useNotesStore(x => x.actions);
-
+ 
   useEffect(() => {
     (async () => {
-      setNote(await read(id))
+      const data = await read(id)
+      if(!data){
+        setStatus('Not found')
+        return;
+      }
+      setNote(data)
       setStatus('Saved')
     })()
   }, [notes])
@@ -77,7 +83,11 @@ function ViewNote() {
   };
 
   if (status === 'Loading') {
-    return null
+    return <Loading />
+  }
+
+  if(status === 'Not found'){
+    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`}/>
   }
 
   const isDark = theme === 'dark';
