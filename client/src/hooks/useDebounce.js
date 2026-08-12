@@ -7,7 +7,7 @@ export const useDebounce = (delay) => {
         clearTimeout(timeout.current);
         timeout.current = setTimeout(() => {
             action()
-        }, delay)
+        }, delay ? delay : 500)
     }
     
     useEffect(() => {

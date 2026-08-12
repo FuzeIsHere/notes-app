@@ -33,7 +33,7 @@ export const NotesGrid = ({ notes = [], menu }) => {
           key={note.id}
           id={note.id}
           title={note.title}
-          preview={note.preview}d
+          preview={note.preview}
           category={note.category}
           updated={note.updated}
           pinned={note.pinned}

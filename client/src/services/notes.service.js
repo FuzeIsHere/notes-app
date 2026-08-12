@@ -18,6 +18,7 @@ export async function createNote(note) {
                 }
             ]
         },
+        preview: '',
         category: "personal",
 
         pinned: false,
@@ -25,6 +26,7 @@ export async function createNote(note) {
         deleted: false,
         created: serverTimestamp(),
         updated: serverTimestamp(),
+        textLastUpdated: serverTimestamp(),
         ...note
     };
     const { id } = await addDoc(x, data)
@@ -49,11 +51,14 @@ export async function getNote(id) {
     }
 }
 
-export async function updateNote(id, updates) {
+export async function updateNote(id, updates) {f
+    delete updates.ownerId;
+    delete updates.noteId; 
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         ...updates,
-        updated: serverTimestamp()
+        ...(('content' in updates) && { textLastUpdated: serverTimestamp() }),
+        updated: serverTimestamp(),
     })
 }
 
@@ -61,7 +66,8 @@ export async function updateTitle(id, title) {
     if (!title) return;
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
-        title
+        title,
+        textLastUpdated: serverTimestamp()
     })
     return title
 }
