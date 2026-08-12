@@ -13,10 +13,3 @@ build/
 
 # Vite cache
 .vite/
-
-# VSCode
-.vscode/
-
-# OS files
-.DS_Store
-Thumbs.db

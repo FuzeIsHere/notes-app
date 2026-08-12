@@ -1,0 +1,8 @@
+test.py
+service-account-key.json
+.env
+benchmark.py
+
+# Ignore Python bytecode cache
+__pycache__/
+*.py[cod]
