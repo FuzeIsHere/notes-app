@@ -104,6 +104,87 @@
   padding-left: 4px;
 }
 
+/* Inline Creator Form Elements */
+.addCategoryForm {
+  margin-bottom: 8px;
+  padding-right: 10px;
+}
+
+.categoryInput {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: transparent;
+  color: inherit;
+}
+
+.categoryInput:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+/* Row wrapper layout to position buttons beside the Category */
+.categoryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  position: relative;
+}
+
+.activeRow {
+  background: #eef2ff;
+}
+
+/* Action button items displayed on hover layout */
+.actionRowBtns {
+  display: none;
+  gap: 2px;
+  padding-right: 4px;
+}
+
+.categoryRow:hover .actionRowBtns {
+  display: flex;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+}
+
+.actionBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.editRowWrapper {
+  width: 100%;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.renameInput {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+  border: 1px solid #4f46e5;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+.renameInput:focus {
+  outline: none;
+  border-color: #6b66ff;
+}
+
 /* New nesting container mimicking an understated folder hierarchy */
 .subContainer {
   display: flex;
@@ -119,7 +200,7 @@
 }
 
 .subBtn {
-  width: 100%;
+  flex: 1;
   text-align: left;
   padding: 6px 10px;
   background: none;
@@ -129,6 +210,9 @@
   font-size: 0.9rem;
   color: #555;
   transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subBtn:hover {
@@ -152,11 +236,10 @@
 
 /* ==========================================================================
    DARK THEME OVERRIDES 
-   Using the CSS Modules nested approach via the wrapper class .dark
    ========================================================================== */
 
 .dark {
-  background: #18181b;       /* Dark zinc/slate background */
+  background: #18181b;       
   border-right-color: #2d2d30;
   color: #f4f4f5;
 }
@@ -182,7 +265,32 @@
   color: #71717a;
 }
 
-/* Updated dark border color to match dark mode theme guidelines smoothly */
+.dark .categoryInput {
+  border-color: #27272a;
+}
+
+.dark .categoryInput:focus {
+  border-color: #818cf8;
+}
+
+.dark .renameInput {
+  background: #27272a;       /* Matching dark user banner card backgrounds */
+  border-color: #3f3f46;     /* Understated dark border */
+  color: #f4f4f5;            /* Crisp light text */
+}
+
+.dark .renameInput:focus {
+  border-color: #818cf8;     /* Indigo color accent line indicator */
+}
+
+.dark .activeRow {
+  background: #1e1b4b;
+}
+
+.dark .actionBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .dark .subContainer {
   border-left-color: #27272a;
 }
@@ -203,11 +311,10 @@
 }
 
 .dark .active {
-  background: #1e1b4b !important; /* Deep dark indigo background */
-  color: #818cf8 !important;    /* Light Indigo text */
+  background: #1e1b4b !important; 
+  color: #818cf8 !important;    
 }
 
-/* Ensure the hierarchy line glows gracefully if active */
 .dark .subContainer:has(.active) {
   border-left-color: #312e81;
 }

@@ -5,17 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUI } from '../hooks/useUI';
 import { FileText, ArrowLeft } from 'lucide-react';
+import styles from './AuthStyles.module.css';
 
 const Login = () => {
   const { login } = useAuth();
-  const { theme } = useUI();
+  const { theme, device } = useUI(); // Extracted device variable here
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isBtnHovered, setIsBtnHovered] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,38 +35,37 @@ const Login = () => {
   };
 
   const currentTheme = theme || 'dark';
+  const currentDevice = device || 'desktop';
 
   return (
-    <div style={styles.pageWrapper(currentTheme)}>
+    <div className={styles.pageWrapper} data-theme={currentTheme} data-device={currentDevice}>
       
-      {/* Decorative Back Navigation Control */}
       <button 
         onClick={() => navigate('/')} 
-        style={styles.backButton}
+        className={styles.backButton}
       >
         <ArrowLeft size={16} /> Back to Home
       </button>
 
-      <div style={styles.authCard(currentTheme)}>
-        {/* Unified Brand Presentation */}
-        <div style={styles.brandHeader}>
-          <div style={styles.logoIcon}>
+      <div className={styles.authCard}>
+        <div className={styles.brandHeader}>
+          <div className={styles.logoIcon}>
             <FileText size={20} color="#1A5CFF" />
           </div>
-          <span style={styles.brandName}>CoNotate</span>
+          <span className={styles.brandName}>CoNotate</span>
         </div>
 
-        <h1 style={styles.title}>Welcome back</h1>
-        <p style={styles.subtitle}>Sign in to resume tracking your markdown thoughts.</p>
+        <h1 className={styles.title}>Welcome back</h1>
+        <p className={styles.subtitle}>Sign in to resume tracking your markdown thoughts.</p>
         
         {error && (
-          <div style={styles.errorAlert}>
-            <strong style={{ fontWeight: '600' }}>Error:</strong> {error}
+          <div className={styles.errorAlert}>
+            <strong className={styles.errorLabel}>Error:</strong> {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} style={styles.formStack}>
-          <div style={styles.inputWrapper}>
+        <form onSubmit={handleSubmit} className={styles.formStack}>
+          <div className={styles.inputWrapper}>
             <Input 
               label="Email" 
               placeholder="Enter your email" 
@@ -75,7 +74,7 @@ const Login = () => {
               disabled={loading} 
             />
           </div>
-          <div style={styles.inputWrapper}>
+          <div className={styles.inputWrapper}>
             <Input 
               label="Password" 
               type="password" 
@@ -90,17 +89,15 @@ const Login = () => {
             type="submit" 
             disabled={loading} 
             size="lg" 
-            style={styles.submitBtn(isBtnHovered, loading)}
-            onMouseEnter={() => setIsBtnHovered(true)}
-            onMouseLeave={() => setIsBtnHovered(false)}
+            className={styles.submitBtn}
           >
             {loading ? 'Logging In...' : 'Log In'}
           </Button>
         </form>
 
-        <div style={styles.footerLinkContainer}>
-          <span style={styles.footerText}>New to CoNotate? </span>
-          <button onClick={() => navigate('/signup')} style={styles.inlineLinkBtn}>
+        <div className={styles.footerLinkContainer}>
+          <span className={styles.footerText}>New to CoNotate? </span>
+          <button onClick={() => navigate('/signup')} className={styles.inlineLinkBtn}>
             Create an account
           </button>
         </div>
@@ -110,132 +107,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// --- Clean Object Style CSS Definitions Positioning ---
-const styles = {
-  pageWrapper: (theme) => ({
-    backgroundColor: theme === 'light' ? '#F5F5F5' : '#121212',
-    color: theme === 'light' ? '#1A1A1A' : '#E0E0E0',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '24px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    transition: 'background-color 0.2s ease',
-  }),
-  backButton: {
-    position: 'absolute',
-    top: '24px',
-    left: '24px',
-    background: 'none',
-    border: 'none',
-    color: '#9E9E9E',
-    fontSize: '14px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  authCard: (theme) => ({
-    backgroundColor: theme === 'light' ? '#FFFFFF' : '#1A1A1A',
-    border: theme === 'light' ? '1px solid #E0E0E0' : '1px solid #2C2C2C',
-    borderRadius: '16px',
-    padding: '40px',
-    width: '100%',
-    maxWidth: '440px',
-    boxSizing: 'border-box',
-    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.2)',
-    transition: 'all 0.2s ease',
-  }),
-  brandHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    marginBottom: '24px',
-  },
-  logoIcon: {
-    backgroundColor: '#242424',
-    padding: '8px',
-    borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandName: {
-    fontSize: '20px',
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: '0.5px',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: '700',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    margin: '0 0 8px 0',
-  },
-  subtitle: {
-    fontSize: '14px',
-    color: '#9E9E9E',
-    textAlign: 'center',
-    margin: '0 0 32px 0',
-    lineHeight: '1.4',
-  },
-  errorAlert: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid rgba(239, 68, 68, 0.3)',
-    color: '#EF4444',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    marginBottom: '24px',
-    lineHeight: '1.4',
-  },
-  formStack: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-  inputWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-  },
-  submitBtn: (isHovered, loading) => ({
-    backgroundColor: loading ? '#2C2C2C' : '#1A5CFF',
-    color: '#FFFFFF',
-    fontSize: '15px',
-    fontWeight: '600',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    border: 'none',
-    width: '100%',
-    marginTop: '8px',
-    cursor: loading ? 'not-allowed' : 'pointer',
-    boxShadow: isHovered && !loading ? '0 4px 16px rgba(26, 92, 255, 0.3)' : 'none',
-    transform: isHovered && !loading ? 'translateY(-1px)' : 'translateY(0)',
-    transition: 'all 0.15s ease',
-  }),
-  footerLinkContainer: {
-    marginTop: '24px',
-    textAlign: 'center',
-    fontSize: '14px',
-  },
-  footerText: {
-    color: '#757575',
-  },
-  inlineLinkBtn: {
-    background: 'none',
-    border: 'none',
-    color: '#1A5CFF',
-    fontWeight: '600',
-    cursor: 'pointer',
-    padding: 0,
-    fontSize: '14px',
-  },
-};

@@ -11,6 +11,8 @@ import { useMenu } from '../hooks/useMenu'
 import NotFound from './NotFound'
 import Loading from './Loading'
 
+import { getCategories } from '../services/category.service'
+
 function ViewNote() {
   const { id } = useParams();
   const { theme } = useUI();
@@ -20,10 +22,10 @@ function ViewNote() {
 
   const notes = useNotesStore(state => state.notes)
   const isStoreLoading = useNotesStore(state => state.loading);
-  const menuOptions = 
-    note.deleted ? ['restore', 'delete'] : 
-    note.archived ? ['unarchive', 'trash'] :
-    ['edit', 'archive', 'trash'];
+  const menuOptions =
+    note.deleted ? ['restore', 'delete'] :
+      note.archived ? ['unarchive', 'trash'] :
+        ['edit', 'archive', 'trash'];
 
   const currentMenu = useMenu(menuOptions);
 
@@ -34,11 +36,11 @@ function ViewNote() {
     pin,
     unpin,
   } = useNotesStore(x => x.actions);
- 
+
   useEffect(() => {
     (async () => {
       const data = await read(id)
-      if(!data){
+      if (!data) {
         setStatus('Not found')
         return;
       }
@@ -46,6 +48,17 @@ function ViewNote() {
       setStatus('Saved')
     })()
   }, [notes])
+
+
+  const [categories, setCategories] = useState([{ name: 'General', id: 'x' }]);
+
+  useEffect(() => {
+    const temp = async () => {
+      let categories = await getCategories()
+      setCategories(categories)
+    }
+    temp();
+  }, [])
 
   const debounceTitle = useDebounce(500);
   const changeTitle = async (title) => {
@@ -59,7 +72,7 @@ function ViewNote() {
 
   const debounceCategory = useDebounce(500);
   const changeCategory = async (category) => {
-    setNote(x => ({ ...x, category: category }));
+    setNote(x => ({ ...x, categoryName: category.name, categoryId: category.id }));
     setStatus('Saving...');
     debounceCategory(async () => {
       await setCategory(id, category);
@@ -86,8 +99,8 @@ function ViewNote() {
     return <Loading />
   }
 
-  if(status === 'Not found'){
-    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`}/>
+  if (status === 'Not found') {
+    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`} />
   }
 
   const isDark = theme === 'dark';
@@ -99,8 +112,9 @@ function ViewNote() {
         id={id}
         title={note.title}
         setTitle={changeTitle}
-        category={note.category}
+        categoryId={note.categoryId}
         onCategoryChange={changeCategory}
+        categoriesList={categories}
         pinned={note.pinned}
         onTogglePin={changePinnedStatus}
         menuOptions={currentMenu(id)}

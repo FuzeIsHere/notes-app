@@ -34,7 +34,7 @@ export const NotesGrid = ({ notes = [], menu }) => {
           id={note.id}
           title={note.title}
           preview={note.preview}
-          category={note.category}
+          category={note.categoryName}
           updated={note.updated}
           pinned={note.pinned}
           onMenuClick={handleMenuClick}

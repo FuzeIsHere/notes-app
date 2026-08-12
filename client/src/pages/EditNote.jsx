@@ -8,6 +8,8 @@ import useNotesStore from '../store/useNotesStore'
 import NotFound from './NotFound'
 import Loading from './Loading'
 
+import { getCategories } from '../services/category.service'
+
 function EditNote() {
   const { id } = useParams();
   const { theme } = useUI();
@@ -41,6 +43,16 @@ function EditNote() {
     initialize()
   }, [id, isStoreLoading, read, notesInStore]);
 
+  const [categories, setCategories] = useState([{ name: 'General', id: 'x' }]);
+
+  useEffect(() => {
+    const temp = async () => {
+      let categories = await getCategories()
+      setCategories(categories)
+    }
+    temp();
+  }, [])
+
   // --- Handlers ---
   const handleContentUpdate = async (x) => {
     setNote(curr => ({ ...curr, ...x }));
@@ -60,7 +72,7 @@ function EditNote() {
 
   const debounceCategory = useDebounce(500);
   const changeCategory = async (category) => {
-    setNote(x => ({ ...x, category: category }));
+    setNote(x => ({ ...x, categoryName: category.name, categoryId: category.id }));
     setSaveStatus('Saving...');
     debounceCategory(async () => {
       await setCategory(id, category);
@@ -89,15 +101,15 @@ function EditNote() {
   }
 
   if (!note) {
-    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`}/>
+    return <NotFound msg={'Unable to find note.'} showFor={2000} to={`/dashboard`} />
   }
 
   if (note.archived) {
-    return <NotFound msg={'Unarchive the note to edit.'} showFor={4000} to={`/notes/${id}`}/>
+    return <NotFound msg={'Unarchive the note to edit.'} showFor={4000} to={`/notes/${id}`} />
   }
 
   if (note.deleted) {
-    return <NotFound msg={'Restore the note to edit.'} showFor={4000} to={`/notes/${id}`}/>
+    return <NotFound msg={'Restore the note to edit.'} showFor={4000} to={`/notes/${id}`} />
   }
 
   const isDark = theme === 'dark';
@@ -109,8 +121,9 @@ function EditNote() {
         id={id}
         title={note.title}
         setTitle={changeTitle}
-        category={note.category}
+        categoryId={note.categoryId}
         onCategoryChange={changeCategory}
+        categoriesList={categories}
         isPinned={note.pinned}
         onTogglePin={changePinnedStatus}
         saveStatus={saveStatus}

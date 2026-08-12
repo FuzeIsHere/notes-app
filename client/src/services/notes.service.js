@@ -1,8 +1,19 @@
-import { doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, collection, serverTimestamp } from "firebase/firestore";
+import {
+    doc, 
+    addDoc, 
+    getDoc, 
+    getDocs,
+    updateDoc, 
+    deleteDoc, 
+    query,
+    where,
+    collection, 
+    serverTimestamp
+} from "firebase/firestore";
+
 import { auth, db } from "../config/firebase";
 
 const x = collection(db, 'notes')
-//const ownerId = auth.currentUser.uid;
 
 export async function createNote(note) {
     const data = {
@@ -19,8 +30,8 @@ export async function createNote(note) {
             ]
         },
         preview: '',
-        category: "personal",
-
+        categoryName: "General",
+        categoryId: "x",
         pinned: false,
         archived: false,
         deleted: false,
@@ -30,11 +41,17 @@ export async function createNote(note) {
         ...note
     };
     const { id } = await addDoc(x, data)
-    return {id, data};
+    return { id, data };
 }
 
-export async function getNotes(userId) {
+export async function getNotes() {
     const q = query(x, where('ownerId', "==", auth.currentUser.uid))
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function getCategoryNotes(categoryId) {
+    const q = query(x, where('ownerId', "==", auth.currentUser.uid), where('categoryId', "==", categoryId))
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
@@ -44,16 +61,17 @@ export async function getNote(id) {
         const noteDocRef = doc(db, 'notes', id)
         const docSnap = await getDoc(noteDocRef)
 
-        if (docSnap.exists()) return {id: docSnap.id, ...docSnap.data()};
+        if (docSnap.exists()) return { id: docSnap.id, ...docSnap.data() };
         else throw 'no such note exists'
     } catch (error) {
         throw error;
     }
 }
 
-export async function updateNote(id, updates) {f
+export async function updateNote(id, updates) {
+    
     delete updates.ownerId;
-    delete updates.noteId; 
+    delete updates.noteId;
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         ...updates,
@@ -72,12 +90,14 @@ export async function updateTitle(id, title) {
     return title
 }
 
-export async function updateCategory(id, category) {
+export async function updateCategory(id, newCategory) {
     const noteDocRef = doc(db, 'notes', id);
+    const { name: categoryName, id: categoryId } = newCategory;
     await updateDoc(noteDocRef, {
-        category
+        categoryName,
+        categoryId
     })
-    return category
+    return newCategory
 }
 
 export async function togglePin(id, curr) {
@@ -89,7 +109,7 @@ export async function togglePin(id, curr) {
 }
 
 
-export async function toggleArchive(id, curr) { 
+export async function toggleArchive(id, curr) {
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         archived: !curr

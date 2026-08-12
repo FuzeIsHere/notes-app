@@ -12,6 +12,7 @@ import {
     toggleTrash,
     deleteNote,
 } from '../services/notes.service';
+import { createCategory, getCategories } from '../services/category.service';
 
 const useNotesStore = create(persist((set, get) => ({
     // --- STATE VARIABLES ---
@@ -68,7 +69,6 @@ const useNotesStore = create(persist((set, get) => ({
 
                 return freshNote;
             } catch (err) {
-                //console.error(err);
                 return null;
             }
         },
@@ -84,9 +84,10 @@ const useNotesStore = create(persist((set, get) => ({
             get().actions.updateLocalNote(id, { title });
         },
 
-        setCategory: async (id, category) => {
-            await updateCategory(id, category);
-            get().actions.updateLocalNote(id, { category });
+        setCategory: async (id, newCategory) => {
+            await updateCategory(id, newCategory);
+            const { name: categoryName, id: categoryId } = newCategory;
+            get().actions.updateLocalNote(id, { categoryName, categoryId });
         },
 
         pin: async (id) => {
@@ -105,6 +106,15 @@ const useNotesStore = create(persist((set, get) => ({
         },
 
         unarchive: async (id) => {
+            const note = await get().actions.read(id)
+            const categoryList = await getCategories();
+            const category = categoryList.find(x => x.id === note.categoryId)
+            //Unarchiving always should restore category if it doesn't already exists
+            if (!category) {
+                const newCategory = await createCategory(note.categoryName, note.categoryId)
+                await get().actions.setCategory(id, newCategory)
+            }
+
             await toggleArchive(id, true);
             get().actions.updateLocalNote(id, { archived: false });
         },
@@ -115,6 +125,16 @@ const useNotesStore = create(persist((set, get) => ({
         },
 
         restoreFromTrash: async (id) => {
+            const note = await get().actions.read(id)
+            const categoryList = await getCategories();
+            const category = categoryList.find(x => x.id === note.categoryId)
+            //The conditions means it should show in it's category upon restoration
+            if (!category && !note.archived) {
+                //hence restore the category for view
+                const newCategory = await createCategory(note.categoryName, note.categoryId)
+                await get().actions.setCategory(id, newCategory)
+            }
+
             await toggleTrash(id, true);
             get().actions.updateLocalNote(id, { deleted: false });
         },
@@ -131,7 +151,7 @@ const useNotesStore = create(persist((set, get) => ({
     partialize: (state) => {
         const { actions, ...rest } = state;
         return rest;
-    }, // 👈 ADD THIS OBJECT HERE
+    },
 }));
 
 export default useNotesStore;

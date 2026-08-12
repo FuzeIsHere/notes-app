@@ -8,7 +8,7 @@ export const UIProvider = ({ children }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme'));
   if (theme === null) {
     setTheme(DEFAULT_THEME)
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('theme', DEFAULT_THEME);
   }
 
   const changeTheme = (curr) => {

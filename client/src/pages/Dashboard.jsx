@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import useNotesStore from '../store/useNotesStore'
 import { semanticSearch } from '../services/search.service'
+import { getCategories } from '../services/category.service'
 
 import Navbar from '../components/ui/Navbar/Navbar'
 import { Sidebar } from '../components/ui/Sidebar/Sidebar'
@@ -24,25 +25,17 @@ const Dashboard = () => {
 	const addNote = useNotesStore(state => state.actions.addNote);
 
 	const [search, setSearch] = useState('');
-
 	const searchId = useRef(0);
-	const [selectedView, setSelectedView] = useState('all')
+
 	const [displayNotes, setDisplayNotes] = useState([])
 	const [loading, setLoading] = useState(true)
-
-	const sidebarItems = [
-		{ id: "all", label: "All Notes", type: "system" },
-		{ id: "work", label: "Work", type: "category" },
-		{ id: "personal", label: "Personal", type: "category" },
-		{ id: "ideas", label: "Ideas", type: "category" },
-		{ id: "archive", label: "Archive", type: "system" },
-		{ id: "trash", label: "Trash", type: "system" },
-	];
+	
+	const [view, setView] = useState({id: "all", type: "system"})
 
 	const menuOptions =
-		selectedView === 'trash' ? ['restore', 'delete'] :
-			selectedView === 'archive' ? ['unarchive', 'trash'] :
-				['edit', 'archive', 'trash'];
+		view.id === 'trash'   ? ['restore', 'delete'] :
+		view.id === 'archive' ? ['unarchive', 'trash'] :
+							    ['edit', 'archive', 'trash'];
 
 	const currentMenu = useMenu(menuOptions);
 
@@ -52,19 +45,16 @@ const Dashboard = () => {
 		if (searched) copy = searched
 		else copy = [...notes]
 
-		const viewFilter = sidebarItems.find(x => x.id === selectedView)
-
-		if (!['archive', 'trash'].includes(viewFilter.id)) {
-			copy = copy.filter(x => !x.archived && !x.deleted)
-			if (viewFilter.type === 'category') {
-				copy = copy.filter(x => x.category === viewFilter.id)
-			}
-		}
-		else {
-			switch (viewFilter.id) {
+		if (view.type === 'system') {
+			switch (view.id) {
+				case 'all': copy = copy.filter(x => !x.archived && !x.deleted); break;
 				case 'archive': copy = copy.filter(x => x.archived && !x.deleted); break;
 				case 'trash': copy = copy.filter(x => x.deleted); break;
 			}
+		}
+		else {
+			copy = copy.filter(x => !x.archived && !x.deleted)
+			copy = copy.filter(x => x.categoryId === view.id).map(x => ({...x, categoryName: null}))
 		}
 
 		copy.sort((a, b) => {
@@ -72,7 +62,6 @@ const Dashboard = () => {
 			else return a.pinned ? -1 : 1;
 		})
 
-		//copy = copy.map(x => ({id: x.id}))
 		setDisplayNotes(copy)
 		setLoading(false)
 	}
@@ -91,13 +80,11 @@ const Dashboard = () => {
 			return;
 		}
 
-		const viewFilter = sidebarItems.find(x => x.id === selectedView);
-
 		const searchFilter = {
 			query: c_search,
-			category: viewFilter.type === 'system' ? 'all' : viewFilter.id,
-			scope: ['archive', 'trash'].includes(viewFilter.id)
-				? viewFilter.id
+			categoryId: view.type === 'system' ? null : view.id,
+			scope: ['archive', 'trash'].includes(view.id)
+				? view.id
 				: 'all',
 		};
 
@@ -112,7 +99,7 @@ const Dashboard = () => {
 
 		debounce(temp);
 
-	}, [notes, search, selectedView]);
+	}, [notes, search, view]);
 
 	const handleCreateNote = async () => {
 		//console.log(typeof addNote, addNote)
@@ -136,8 +123,8 @@ const Dashboard = () => {
 				<Sidebar
 					isOpen={showSide}
 					onClose={() => setShowSide(false)}
-					active={selectedView}
-					setActive={setSelectedView}
+					active={view}
+					setActive={setView}
 				/>
 				{!loading ? (
 					<NotesGrid notes={displayNotes} menu={currentMenu} />

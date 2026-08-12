@@ -11,9 +11,9 @@ const NoteNavbar = ({
 	id,
 	title = '',
 	setTitle = null,
-	category = '',
+	categoryId = '',
 	onCategoryChange = null,
-	categoriesList = ['Personal', 'Work', 'Ideas'], 
+	categoriesList = [{ name: "General", id: "x" }],
 	pinned = false,
 	onTogglePin = null,
 	onArchive,
@@ -49,7 +49,7 @@ const NoteNavbar = ({
 
 		const checkOverflow = () => {
 			if (!textRef.current || !wrapperRef.current) return;
-			
+
 			const containerWidth = wrapperRef.current.clientWidth;
 			const textWidth = textRef.current.offsetWidth;
 
@@ -78,6 +78,11 @@ const NoteNavbar = ({
 		}
 	};
 
+	const handleCategoryChange = (id) => {
+		const selectedCategory = categoriesList.find(cat => cat.id === id);
+		onCategoryChange?.(selectedCategory);
+	};
+
 	const isMobile = device === 'mobile';
 
 	// Extracted controls markup to render them adaptively based on device state
@@ -86,13 +91,13 @@ const NoteNavbar = ({
 			<div className={styles.categoryWrapper}>
 				<select
 					className={styles.categorySelect}
-					value={category}
-					onChange={(e) => onCategoryChange?.(e.target.value)}
+					value={categoryId}
+					onChange={(e) => handleCategoryChange?.(e.target.value)}
 					aria-label="Change category"
 				>
 					<option value="" disabled hidden>Category</option>
 					{categoriesList.map(cat => (
-						<option key={cat} value={cat.toLowerCase()}>{cat}</option>
+						<option key={cat.id} value={cat.id}>{cat.name}</option>
 					))}
 				</select>
 			</div>
@@ -134,7 +139,7 @@ const NoteNavbar = ({
 					</span>
 				)}
 			</div>
-			
+
 			{/* Only render next to title on Desktop layout */}
 			{!isMobile && renderActionControls()}
 		</div>
