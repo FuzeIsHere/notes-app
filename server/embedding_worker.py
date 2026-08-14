@@ -170,8 +170,7 @@ def process_note_embedding(job: EmbeddingJob):
     embedding_ref = db.collection("noteEmbeddings").document(job.note_id)
     embedding_ref.set({
         "ownerId": job.owner_id,
-        "noteId": job.note_id,
-        "category": note_data.get("category", "personal"),
+        "categoryId": note_data.get("categoryId", "x"),
         "embedding": Vector(vector_array),
         "textLastUpdated": note_data.get("textLastUpdated", 0),
         "archived": note_data.get("archived", False),

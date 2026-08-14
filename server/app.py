@@ -45,10 +45,10 @@ search_queue = queue.Queue()
 # Request validation schema
 class SearchRequest(BaseModel):
     query: str
-    category: str  # "all", "personal", "work", "ideas"
-    scope: str     # "active", "trash"
+    categoryId: str | None 
+    scope: str | None    # "active", "trash", null
 
-def process_search_from_queue(query_text: str, user_id: str, target_category: str, scope: str, result_container: list, exception_container: list, event: threading.Event):
+def process_search_from_queue(query_text: str, user_id: str, target_categoryId: str | None, scope: str | None, result_container: list, exception_container: list, event: threading.Event):
     """Executes single-threaded vector inference calculations safely."""
     try:
         query_vector = get_text_embedding(query_text)
@@ -65,21 +65,28 @@ def process_search_from_queue(query_text: str, user_id: str, target_category: st
         else:
             query = query.where(filter=FieldFilter("deleted", "==", False)).where(filter=FieldFilter("archived", "==", False))
 
-        # 2. CATEGORY GATEKEEPER
-        if target_category.strip().lower() != "all":
-            query = query.where(filter=FieldFilter("category", "==", target_category))
+        # 2. categoryId GATEKEEPER
+        if target_categoryId is not None:
+            query = query.where(filter=FieldFilter("categoryId", "==", target_categoryId))
 
 
         # 3. VECTOR EXTREMA SEARCH
         query = query.find_nearest(
             vector_field="embedding",
             query_vector=Vector(query_vector),
-            limit=10,
+            limit=20,
+            distance_threshold=0.8,
+            distance_result_field="vector_distance",
             distance_measure=DistanceMeasure.COSINE 
         )
         
         docs = query.stream()
-        note_ids = [doc.to_dict().get("noteId") for doc in docs if doc.to_dict().get("noteId")]
+        # for doc in docs:
+        #     # Look at this printed number for your exact-word match
+        #     print(f"Calculated Distance: {doc.get('vector_distance')}")
+        
+        note_ids = [doc.id for doc in docs]
+
         result_container.extend(note_ids)
     except Exception as e:
         exception_container.append(e)
@@ -90,8 +97,8 @@ def search_queue_handler():
     """Worker handles execution payloads through the FIFO pipeline stream sequentially."""
     while True:
         # Blocks thread until an item enters the pipeline queue
-        query_text, user_id, target_category, scope, result_container, exception_container, event = search_queue.get()
-        process_search_from_queue(query_text, user_id, target_category, scope, result_container, exception_container, event)
+        query_text, user_id, target_categoryId, scope, result_container, exception_container, event = search_queue.get()
+        process_search_from_queue(query_text, user_id, target_categoryId, scope, result_container, exception_container, event)
         search_queue.task_done()
 
 threading.Thread(target=search_queue_handler, name="SearchQueueEngine", daemon=True).start()
@@ -99,7 +106,7 @@ threading.Thread(target=search_queue_handler, name="SearchQueueEngine", daemon=T
 
 @app.post("/api/search")
 async def semantic_search(request: SearchRequest, verified_uid: str = Depends(get_current_user)):
-    if not request.query or not request.category or not request.scope:
+    if not request.query:
         raise HTTPException(status_code=400, detail="Missing configuration arguments.")
         
     event = threading.Event()
@@ -110,7 +117,7 @@ async def semantic_search(request: SearchRequest, verified_uid: str = Depends(ge
     search_queue.put((
         request.query, 
         verified_uid, 
-        request.category, 
+        request.categoryId, 
         request.scope, 
         note_ids_output, 
         exception_container, 
@@ -131,4 +138,4 @@ async def semantic_search(request: SearchRequest, verified_uid: str = Depends(ge
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=False)  # Set reload to false for singular clear load logs
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=True)  # Set reload to false for singular clear load logs
