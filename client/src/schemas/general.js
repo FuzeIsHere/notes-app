@@ -17,8 +17,7 @@ note = {
 
 noteEmbedding = {
     ownerId: "...",
-    noteId: "...",
-    category: '',
+    categoryId: '',
     embedding: Vector(vector_array), //384 dim
     textLastUpdated: note_data.get("textLastUpdated", 0),
     archived: false,

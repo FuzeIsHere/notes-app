@@ -54,7 +54,6 @@ export const Sidebar = ({
 
     const handleLogout = async () => {
         await logout();
-        navigate('/login');
     };
 
     const setActiveWrapper = (view) => {

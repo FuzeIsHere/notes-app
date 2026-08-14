@@ -1,13 +1,13 @@
 import {
-    doc, 
-    addDoc, 
-    getDoc, 
+    doc,
+    addDoc,
+    getDoc,
     getDocs,
-    updateDoc, 
-    deleteDoc, 
+    updateDoc,
+    deleteDoc,
     query,
     where,
-    collection, 
+    collection,
     serverTimestamp
 } from "firebase/firestore";
 
@@ -69,7 +69,7 @@ export async function getNote(id) {
 }
 
 export async function updateNote(id, updates) {
-    
+
     delete updates.ownerId;
     delete updates.noteId;
     const noteDocRef = doc(db, 'notes', id);
@@ -91,41 +91,78 @@ export async function updateTitle(id, title) {
 }
 
 export async function updateCategory(id, newCategory) {
-    const noteDocRef = doc(db, 'notes', id);
+
     const { name: categoryName, id: categoryId } = newCategory;
+
+    //notes
+    const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         categoryName,
         categoryId
     })
+
+    //noteEmbeddings
+    const noteEmbeddingDocRef = doc(db, 'noteEmbeddings', id)
+    await updateDoc(noteEmbeddingDocRef, {
+        categoryId
+    })
+
     return newCategory
 }
 
 export async function togglePin(id, curr) {
+
+    //notes
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         pinned: !curr
     })
+
     return !curr
 }
 
 
 export async function toggleArchive(id, curr) {
+
+    //notes
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         archived: !curr
     })
+
+    //noteEmbeddings
+    const noteEmbeddingDocRef = doc(db, 'noteEmbeddings', id);
+    await updateDoc(noteEmbeddingDocRef, {
+        archived: !curr
+    })
+
     return !curr
 }
 
 export async function toggleTrash(id, curr) {
+
+    //notes
     const noteDocRef = doc(db, 'notes', id);
     await updateDoc(noteDocRef, {
         deleted: !curr
     })
+
+    //noteEmbeddings
+    const noteEmbeddingDocRef = doc(db, 'noteEmbeddings', id);
+    await updateDoc(noteEmbeddingDocRef, {
+        deleted: !curr
+    })
+
     return !curr
 }
 
 export async function deleteNote(id) {
+
+    //noteEmbeddings
+    const noteEmbeddingDocRef = doc(db, 'noteEmbeddings', id);
+    await deleteDoc(noteEmbeddingDocRef)
+
+    //notes
     const noteDocRef = doc(db, 'notes', id);
     await deleteDoc(noteDocRef)
 }

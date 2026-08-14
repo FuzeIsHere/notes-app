@@ -4,8 +4,8 @@ import { getNote } from "./notes.service";
 const API_URL = import.meta.env.VITE_SEARCH_API_URL;
 
 export const semanticSearch = async ({query, categoryId, scope}) => {
-
-    if(!query || !categoryId || !scope) return [];
+    
+    if(!query) return [];
 
     const user = auth.currentUser;
 

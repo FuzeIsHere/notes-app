@@ -25,6 +25,7 @@ const Dashboard = () => {
 	const addNote = useNotesStore(state => state.actions.addNote);
 
 	const [search, setSearch] = useState('');
+	const prevSearchRef = useRef(search)
 	const searchId = useRef(0);
 
 	const [displayNotes, setDisplayNotes] = useState([])
@@ -58,7 +59,7 @@ const Dashboard = () => {
 		}
 
 		copy.sort((a, b) => {
-			if (a.pinned === b.pinned) return b.createdAt - a.createdAt;
+			if (a.pinned === b.pinned) return b.created - a.created;
 			else return a.pinned ? -1 : 1;
 		})
 
@@ -80,21 +81,28 @@ const Dashboard = () => {
 			return;
 		}
 
+		if(c_search === prevSearchRef.current.trim()) return;
+
 		const searchFilter = {
 			query: c_search,
 			categoryId: view.type === 'system' ? null : view.id,
 			scope: ['archive', 'trash'].includes(view.id)
 				? view.id
-				: 'all',
+				: null,
 		};
 
 		const temp = async () => {
 			setLoading(true);
 			if (currentSearchId !== searchId.current) {setLoading(false); return}
-			const search_data = await semanticSearch(searchFilter);
-			if (currentSearchId !== searchId.current) {setLoading(false); return}
-			setDisplayNotes(search_data);
-			setLoading(false);
+			try{
+				const search_data = await semanticSearch(searchFilter);
+				if (currentSearchId !== searchId.current) {setLoading(false); return}
+				setDisplayNotes(search_data);
+				prevSearchRef.current = c_search;
+				setLoading(false);
+			}catch(err){
+				console.log(err)
+			}
 		};
 
 		debounce(temp);
