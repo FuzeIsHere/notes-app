@@ -167,13 +167,11 @@ const NoteEditNavbar = ({
 
 					{!isMobile && (
 						<>
-							{!!user ? (
+							{user ? (
 								<button type="button" className={styles.avatarButton} aria-label="User profile">
-									<img
-										className={styles.avatarImg}
-										src="https://unsplash.com"
-										alt="User avatar"
-									/>
+									<span className={styles.avatarTxt}>
+										{user?.displayName ? user.displayName.charAt(0).toUpperCase() : '?'}
+									</span>
 								</button>
 							) : (
 								<Button variant="primary" size="sm">Log In</Button>

@@ -34,7 +34,7 @@
 .navContainer {
   height: 60px;
   margin: 0 auto;
-  padding: 0 18px;
+  padding: 0 24px 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -184,20 +184,21 @@
 
 .categorySelect {
   appearance: none;
-  background-color: var(--hover-bg);
-  border: 1px solid transparent;
+  background-color: transparent;
+  border: 1px solid var(--nav-border);
   border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.8rem;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
   outline: none;
-  transition: background-color 0.15s, color 0.15s;
+  transition: all 0.15s ease;
 }
 
 .categorySelect:hover {
-  color: var(--text-main);
+  background-color: var(--hover-bg);
+  border-color: var(--text-light);
 }
 
 .actionIconButton {
@@ -257,6 +258,20 @@
   cursor: pointer;
   padding: 0;
   display: flex;
+}
+
+/* New styling for the text-based avatar */
+.avatarTxt {
+  width: 40px; /* Matches original image width */
+  height: 40px; /* Matches original image height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 20px;
 }
 
 .avatarImg {

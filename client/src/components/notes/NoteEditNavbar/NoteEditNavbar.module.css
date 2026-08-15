@@ -48,7 +48,7 @@
 .navContainer {
   height: 100%;
   margin: 0 auto;
-  padding: 0 18px;
+  padding: 0 24px 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -271,7 +271,20 @@
   cursor: pointer;
   padding: 0;
   display: flex;
-  flex-shrink: 0;
+}
+
+/* New styling for the text-based avatar */
+.avatarTxt {
+  width: 40px; /* Matches original image width */
+  height: 40px; /* Matches original image height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 20px;
 }
 
 .avatarImg {

@@ -18,7 +18,7 @@ const Navbar = ({
 
 	// Shared Search Component
 	const SearchBar = (
-		<div className={styles.searchContainer} style={{maxWidth: isMobile ? 'none' : '500px'}}>
+		<div className={styles.searchContainer} style={{ maxWidth: isMobile ? 'none' : '500px' }}>
 			<Input
 				id="global-search"
 				placeholder="Search..."
@@ -35,8 +35,8 @@ const Navbar = ({
 			{buttons.map(({ name, event }) => {
 				const isNoteBtn = name.toLowerCase().includes('note');
 				return (
-					<button 
-						key={name} 
+					<button
+						key={name}
 						onClick={event}
 						className={isNoteBtn ? styles.noteButton : styles.defaultButton}
 					>
@@ -52,7 +52,7 @@ const Navbar = ({
 	return (
 		<header className={`${styles.navbar} ${styles[theme]}`}>
 			<div className={isMobile ? styles.navContainerMobile : styles.navContainerDesktop}>
-				
+
 				{isMobile ? (
 					<>
 						<div className={styles.topRowMobile}>
@@ -84,11 +84,9 @@ const Navbar = ({
 							<div className={styles.rightSection}>
 								{user ? (
 									<button type="button" className={styles.avatarButton} aria-label="User profile">
-										<img
-											className={styles.avatarImg}
-											src="https://unsplash.com"
-											alt=""
-										/>
+										<span className={styles.avatarTxt}>
+											{user?.displayName ? user.displayName.charAt(0).toUpperCase() : '?'}
+										</span>
 									</button>
 								) : (
 									<Button variant="primary" size="sm">Log In</Button>
