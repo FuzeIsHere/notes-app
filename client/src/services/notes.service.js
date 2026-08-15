@@ -15,32 +15,36 @@ import { auth, db } from "../config/firebase";
 
 const x = collection(db, 'notes')
 
-export async function createNote(note) {
+export async function createNote(note = {}) {
     const data = {
         ownerId: auth.currentUser.uid,
         collaborators: [],
 
-        title: "New",
-        content: {
-            "type": "doc",
-            "content": [
+        title: note.title ?? "New",
+        content: note.content ?? {
+            type: "doc",
+            content: [
                 {
-                    "type": "paragraph"
+                    type: "paragraph"
                 }
             ]
         },
-        preview: '',
-        categoryName: "General",
-        categoryId: "x",
+
+        preview: note.preview ?? "",
+        categoryName: note.categoryName ?? "General",
+        categoryId: note.categoryId ?? "x",
+
         pinned: false,
         archived: false,
         deleted: false,
+
         created: serverTimestamp(),
         updated: serverTimestamp(),
         textLastUpdated: serverTimestamp(),
-        ...note
     };
-    const { id } = await addDoc(x, data)
+
+    const { id } = await addDoc(x, data);
+
     return { id, data };
 }
 
