@@ -13,3 +13,5 @@ build/
 
 # Vite cache
 .vite/
+
+project_info/

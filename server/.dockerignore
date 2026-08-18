@@ -1,0 +1,7 @@
+__pycache__/
+.vscode/
+.env
+.git
+.gitignore
+benchmark.py
+test.py
