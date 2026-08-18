@@ -1,4 +1,3 @@
-# Notes App Architecture
 ```mermaid
 ---
 config:
@@ -16,34 +15,34 @@ config:
     clusterBorder: "#cbd5e1"
 ---
 flowchart TB
- subgraph Client_Layer["React Frontend"]
+    subgraph Client_Layer["React Frontend"]
         App(["React Notes App"])
- end
- subgraph Firebase_Layer["Firebase Cloud Services"]
+    end
+
+    subgraph Firebase_Layer["Firebase Cloud Services"]
         Auth{"Firebase Auth"}
         Firestore[("Firestore DB <br> &amp; Vector Index")]
- end
- subgraph Runtime_Server["Uvicorn ASGI Web Server"]
+    end
+
+    subgraph Runtime_Server["Uvicorn ASGI Web Server"]
         API{{"FastAPI Application Instance<br>Search Endpoint Layer"}}
- end
- subgraph Sync_Engine["Background Sync Pipeline"]
-        Listener[/"Firestore Listener Thread<br>&amp; Inline Deduplication Dict<br>Sets job.cancelled=True"/]
+    end
+
+    subgraph Sync_Engine["Background Sync Pipeline"]
+        Listener[/"Firestore Listener Thread<br>&amp; 3s Embedding Debounce<br>(Job Deduplication) "/]
         PQueue[["Min-Heap Priority Queue"]]
         Worker1(["Embedding Worker 1"])
         Worker2(["Embedding Worker 2"])
- end
- subgraph Search_Engine["Background Search Pipeline"]
+    end
+
+    subgraph Search_Engine["Background Search Pipeline"]
         SQueue[["Thread-Safe Search Queue"]]
         SearchWorker(["Search Worker Thread"])
- end
- subgraph Compute_Services["Shared ML Services"]
-        ModelService[/"all-MiniLM-L6-v2 Model<br>+ CUDA Engine Service"/]
- end
+    end
 
-    Client_Layer ~~~ RightRail[" "]
-    Runtime_Server ~~~ RightRail
-    Search_Engine ~~~ RightRail
-    Compute_Services ~~~ RightRail
+    subgraph Compute_Services["Embedding Model"]
+        ModelService[/"all-MiniLM-L6-v2 Model<br>+ CUDA"/]
+    end
 
     API == Starts Engine Threads ==> Listener
     App -- Authenticate --> Auth
@@ -51,19 +50,25 @@ flowchart TB
     Firestore -. Listen Changes .-> Listener
     Listener -- Push New Job --> PQueue
     PQueue -- Pop Job --> Worker1 & Worker2
-    Worker1 -- Request Note Embedding --> ModelService
-    Worker2 -- Request Note Embedding --> ModelService
-    Worker1 -- Write Embedding Vectors --> Firestore
-    Worker2 -- Write Embedding Vectors --> Firestore
+
+    %% Seamless Line Merging Layout Layout 
+    Worker1 --- J1
+    Worker2 --- J1
+    J1 -- Request Note Embedding --> ModelService
+
+    Worker1 --- J2
+    Worker2 --- J2
+    J2 -- Write Embedding Vectors --> Firestore
+
     App -- Search Query + Token --> API
     API -- Verify Token --> Auth
-    API -- Enqueue Query --> SQueue
+    API -- Enqueue Query + Trusted UID --> SQueue
     SQueue -- Dequeue Query --> SearchWorker
     SearchWorker -- Request Query Embedding --> ModelService
     SearchWorker -- Vector Similarity Query --> Firestore
     Firestore -. Return Matching Notes .-> SearchWorker
     SearchWorker -- Send Results --> API
-    API -- Payload Return --> App
+    API -- Search Results --> App
 
     App:::client
     Auth:::firebase
@@ -78,6 +83,10 @@ flowchart TB
     ModelService:::service
     RightRail:::hiddenAnchor
 
+    %% Declared as pure empty containers to wipe out the junction circles
+    J1[" "]:::invisibleMerge
+    J2[" "]:::invisibleMerge
+
     classDef default fill:#ffffff,stroke:#cbd5e1,color:#0f172a
     classDef client fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0f172a
     classDef firebase fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#0f172a
@@ -85,5 +94,8 @@ flowchart TB
     classDef queue fill:#f8fafc,stroke:#64748b,stroke-width:2px,stroke-dasharray:4 4,color:#334155
     classDef service fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#0f172a
     classDef hiddenAnchor fill:none,stroke:none,color:#00000000
+
+    %% Strict Zero-Asset Configuration to force a single shared line trace
+    classDef invisibleMerge display:none,visibility:hidden,opacity:0,fill:none,stroke:none,stroke-width:0px,width:0px,height:0px,padding:0px,margin:0px;
 
 ```

@@ -30,7 +30,7 @@ flowchart TB
     end
 
     subgraph Sync_Engine["Background Sync Pipeline"]
-        Listener[/"Firestore Listener Thread<br>&amp; Inline Deduplication Dict<br>Sets job.cancelled=True"/]
+        Listener[/"Firestore Listener Thread<br>&amp; 3s Embedding Debounce<br>(Job Deduplication)"/]
         PQueue[["Min-Heap Priority Queue"]]
         Worker1(["Embedding Worker 1"])
         Worker2(["Embedding Worker 2"])
@@ -41,14 +41,9 @@ flowchart TB
         SearchWorker(["Search Worker Thread"])
     end
 
-    subgraph Compute_Services["Shared ML Services"]
-        ModelService[/"all-MiniLM-L6-v2 Model<br>+ CUDA Engine Service"/]
+    subgraph Compute_Services["Embedding Model"]
+        ModelService[/"all-MiniLM-L6-v2 Model<br>+ CUDA"/]
     end
-
-    Client_Layer ~~~ RightRail[" "]
-    Runtime_Server ~~~ RightRail
-    Search_Engine ~~~ RightRail
-    Compute_Services ~~~ RightRail
 
     API == Starts Engine Threads ==> Listener
     App -- Authenticate --> Auth
@@ -56,19 +51,25 @@ flowchart TB
     Firestore -. Listen Changes .-> Listener
     Listener -- Push New Job --> PQueue
     PQueue -- Pop Job --> Worker1 & Worker2
-    Worker1 -- Request Note Embedding --> ModelService
-    Worker2 -- Request Note Embedding --> ModelService
-    Worker1 -- Write Embedding Vectors --> Firestore
-    Worker2 -- Write Embedding Vectors --> Firestore
+
+    %% Seamless Line Merging Layout
+    Worker1 --- J1
+    Worker2 --- J1
+    J1 -- Request Note Embedding --> ModelService
+
+    Worker1 --- J2
+    Worker2 --- J2
+    J2 -- Write Embedding Vectors --> Firestore
+
     App -- Search Query + Token --> API
     API -- Verify Token --> Auth
-    API -- Enqueue Query --> SQueue
+    API -- Enqueue Query + Trusted UID --> SQueue
     SQueue -- Dequeue Query --> SearchWorker
     SearchWorker -- Request Query Embedding --> ModelService
     SearchWorker -- Vector Similarity Query --> Firestore
     Firestore -. Return Matching Notes .-> SearchWorker
     SearchWorker -- Send Results --> API
-    API -- Payload Return --> App
+    API -- Search Results --> App
 
     App:::client
     Auth:::firebase
@@ -83,6 +84,10 @@ flowchart TB
     ModelService:::service
     RightRail:::hiddenAnchor
 
+    %% Declared as pure empty containers to wipe out the junction circles
+    J1[" "]:::invisibleMerge
+    J2[" "]:::invisibleMerge
+
     classDef default fill:#111827,stroke:#334155,color:#e2e8f0
     classDef client fill:#082f49,stroke:#38bdf8,stroke-width:2px,color:#e0f2fe
     classDef firebase fill:#431407,stroke:#fb923c,stroke-width:2px,color:#ffedd5
@@ -90,4 +95,8 @@ flowchart TB
     classDef queue fill:#1e293b,stroke:#94a3b8,stroke-width:2px,stroke-dasharray:4 4,color:#cbd5e1
     classDef service fill:#052e16,stroke:#4ade80,stroke-width:2px,color:#dcfce7
     classDef hiddenAnchor fill:none,stroke:none,color:#00000000
+
+    %% Strict Zero-Asset Configuration to force a single shared orthogonal line trace
+    classDef invisibleMerge display:none,visibility:hidden,opacity:0,fill:none,stroke:none,stroke-width:0px,width:0px,height:0px,padding:0px,margin:0px;
+
 ```
