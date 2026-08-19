@@ -5,6 +5,7 @@ GPU-accelerated semantic search and Firestore vector search.
 ## 📋 Table of Contents
 - [Features](#-features)
 - [Installation](#-installation)
+- [Architecture](#-architecture)
 - [Usage](#-usage)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -19,6 +20,12 @@ GPU-accelerated semantic search and Firestore vector search.
 - GPU-accelerated embedding generation
 - Asynchronous background embedding pipeline
 - Multi-tenant data isolation
+
+## 🏗️ Architecture
+<p align="center">
+  <img alt="Recall System Architecture Dark" src="assets/architecture/dark.svg#gh-dark-mode-only" width="100%">
+  <img alt="Recall System Architecture Light" src="assets/architecture/light.svg#gh-light-mode-only" width="100%">
+</p>
 
 ## ⚙️ Installation
 Provide step-by-step instructions to get the local development environment running.
