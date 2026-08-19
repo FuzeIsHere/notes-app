@@ -24,9 +24,14 @@
   --btn-active-bg: #f1f5f9;
   --code-bg: #f1f5f9;
   --code-text: #0f172a;
-  --pre-bg: #0f172a;
+  --pre-bg: #09090b;
   --pre-text: #e2e8f0;
   --hr-border: #e2e8f0;
+  
+  /* Scrollbar Palette */
+  --sb-track: #f8fafc;
+  --sb-thumb: #cbd5e1;
+  --sb-thumb-hover: #94a3b8;
 }
 
 .dark {
@@ -44,6 +49,11 @@
   --pre-bg: #09090b;
   --pre-text: #e4e4e7;
   --hr-border: #27272a;
+
+  /* Scrollbar Palette */
+  --sb-track: #18181b;
+  --sb-thumb: #3f3f46;
+  --sb-thumb-hover: #52525b;
 }
 
 .toolbar {
@@ -91,6 +101,7 @@
   background: var(--editor-border);
 }
 
+/* --- Content Area & Hidden-Until-Hover Scrollbar Styles --- */
 .contentArea {
   padding: 20px;
   overflow-y: auto;
@@ -98,8 +109,52 @@
   height: 100%;
   background: var(--editor-bg);
   transition: background-color 0.2s ease;
+
+  /* Hide scrollbar by default for Firefox */
+  scrollbar-width: none;
 }
 
+/* Show scrollbar on hover for Firefox */
+.contentArea:hover {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+/* Base WebKit Scrollbar Setup */
+.contentArea::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Hide track and thumb by default using transparent colors */
+.contentArea::-webkit-scrollbar-track {
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.contentArea::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Reveal scrollbar when mouse enters the content area */
+.contentArea:hover::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+.contentArea:hover::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border: 2px solid var(--sb-track);
+}
+
+/* Keep the interactive hover state for the scrollbar handle itself */
+.contentArea::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover) !important;
+}
+
+/* --- Tiptap Text Styling --- */
 .contentArea :global(.tiptap):focus {
   outline: none;
 }
@@ -134,6 +189,7 @@
   color: var(--code-text);
 }
 
+/* --- Code Block Horizontal Scrollbar (Also Hidden-Until-Hover) --- */
 .contentArea :global(.tiptap) pre {
   padding: 14px;
   border-radius: 8px;
@@ -142,6 +198,44 @@
   font-family: 'Courier New', Courier, monospace;
   background: var(--pre-bg);
   color: var(--pre-text);
+
+  /* Firefox Hidden-Until-Hover */
+  scrollbar-width: none;
+}
+
+.contentArea :global(.tiptap) pre:hover {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 #09090b;
+}
+
+/* WebKit Setup for Code Blocks */
+.contentArea :global(.tiptap) pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.contentArea :global(.tiptap) pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.contentArea :global(.tiptap) pre::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+/* Reveal code block scrollbar on hover */
+.contentArea :global(.tiptap) pre:hover::-webkit-scrollbar-track {
+  background: #09090b;
+  border-radius: 0 0 8px 8px;
+}
+
+.contentArea :global(.tiptap) pre:hover::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border: 2px solid #09090b;
+}
+
+.contentArea :global(.tiptap) pre::-webkit-scrollbar-thumb:hover {
+  background: #52525b !important;
 }
 
 .contentArea :global(.tiptap) pre code {

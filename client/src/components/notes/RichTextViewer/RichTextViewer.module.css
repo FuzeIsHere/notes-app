@@ -12,6 +12,49 @@
   transition: background-color 0.2s ease, border-color 0.2s ease;
   background: var(--viewer-bg);
   border: 1px solid var(--viewer-border);
+
+  /* Hide scrollbar by default for Firefox */
+  scrollbar-width: none;
+}
+
+/* Show scrollbar on hover for Firefox */
+.viewerWrapper:hover {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+/* Base WebKit Scrollbar Setup for main container */
+.viewerWrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Hide track and thumb by default using transparent colors */
+.viewerWrapper::-webkit-scrollbar-track {
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.viewerWrapper::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Reveal scrollbar when mouse enters the viewer area */
+.viewerWrapper:hover::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+.viewerWrapper:hover::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border: 2px solid var(--sb-track);
+}
+
+/* Keep the interactive hover state for the scrollbar handle itself */
+.viewerWrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover) !important;
 }
 
 .light {
@@ -21,10 +64,15 @@
   --text-body: #334155;
   --code-bg: #f1f5f9;
   --code-text: #0f172a;
-  --pre-bg: #0f172a;
+  --pre-bg: #09090b; /* Swapped to match dark pre for uniform code styling */
   --pre-text: #e2e8f0;
   --hr-border: #e2e8f0;
   --link-color: #2563eb;
+
+  /* Scrollbar Palette */
+  --sb-track: #f8fafc;
+  --sb-thumb: #cbd5e1;
+  --sb-thumb-hover: #94a3b8;
 }
 
 .dark {
@@ -38,6 +86,11 @@
   --pre-text: #e4e4e7;
   --hr-border: #27272a;
   --link-color: #3b82f6;
+
+  /* Scrollbar Palette */
+  --sb-track: #18181b;
+  --sb-thumb: #3f3f46;
+  --sb-thumb-hover: #52525b;
 }
 
 .renderedContent h2 {
@@ -70,6 +123,7 @@
   color: var(--code-text);
 }
 
+/* --- Code Block Horizontal Scrollbar (Hidden-Until-Hover) --- */
 .renderedContent pre {
   padding: 14px;
   border-radius: 8px;
@@ -78,6 +132,44 @@
   font-family: 'Courier New', Courier, monospace;
   background: var(--pre-bg);
   color: var(--pre-text);
+
+  /* Firefox Hidden-Until-Hover */
+  scrollbar-width: none;
+}
+
+.renderedContent pre:hover {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 #09090b;
+}
+
+/* WebKit Setup for Code Blocks */
+.renderedContent pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.renderedContent pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.renderedContent pre::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+/* Reveal code block scrollbar on hover */
+.renderedContent pre:hover::-webkit-scrollbar-track {
+  background: #09090b;
+  border-radius: 0 0 8px 8px;
+}
+
+.renderedContent pre:hover::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border: 2px solid #09090b;
+}
+
+.renderedContent pre::-webkit-scrollbar-thumb:hover {
+  background: #52525b !important;
 }
 
 .renderedContent pre code {

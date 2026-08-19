@@ -18,7 +18,7 @@ export default function Home() {
       
       {/* HEADER NAVBAR */}
       <header style={styles.header}>
-        <div style={styles.logo}>CoNotate</div>
+        <div style={styles.logo}>{import.meta.env.VITE_APP_NAME}</div>
         <button 
           style={{...styles.ctaButton(isBtnHovered), padding: '10px 20px', fontSize: '14px'}}
           onMouseEnter={() => setIsBtnHovered(true)}
@@ -38,7 +38,7 @@ export default function Home() {
         <div style={styles.heroBadge}>Cloud-Synced Markdown Workspace</div>
         <h1 style={styles.heroTitle}>Your thoughts, structured and searchable.</h1>
         <p style={styles.heroSubtitle}>
-          CoNotate is a modern note-taking dashboard designed to capture your ideas instantly. 
+          {import.meta.env.VITE_APP_NAME} is a modern note-taking dashboard designed to capture your ideas instantly. 
           Format with full rich text controls, find anything with intelligent semantic search, 
           and keep your workspace organized across all of your devices.
         </p>

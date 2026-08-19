@@ -52,7 +52,7 @@
 /* Fallbacks for safer rendering patterns if theme properties remain unbound */
 .logo {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   text-decoration: none;
   font-family: system-ui, -apple-system, sans-serif;
 }

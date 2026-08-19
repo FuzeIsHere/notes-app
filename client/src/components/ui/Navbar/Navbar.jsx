@@ -65,7 +65,7 @@ const Navbar = ({
 								>
 									☰
 								</button>
-								<a href="/" className={styles.logo}>CoNotate</a>
+								<a href="/" className={styles.logo}>{import.meta.env.VITE_APP_NAME}</a>
 							</div>
 							{ActionButtons}
 						</div>
@@ -74,7 +74,7 @@ const Navbar = ({
 				) : (
 					<>
 						<div className={styles.leftSection}>
-							<a href="/" className={styles.logo}>CoNotate</a>
+							<a href="/" className={styles.logo}>{import.meta.env.VITE_APP_NAME}</a>
 						</div>
 
 						{SearchBar}
