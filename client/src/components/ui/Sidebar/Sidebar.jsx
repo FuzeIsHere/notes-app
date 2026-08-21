@@ -57,7 +57,8 @@ export const Sidebar = ({
     };
 
     const setActiveWrapper = (view) => {
-        if (!isNotMobile) onClose();
+        //is mobile && !category
+        if (!isNotMobile && view.type !== 'category') onClose();
         setActive(view);
     };
 
